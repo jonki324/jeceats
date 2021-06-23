@@ -4,16 +4,23 @@
     <!-- Enable features -->
     <featureManager>
         <feature>mpHealth-3.0</feature>
+        <feature>jpa-2.2</feature>
     </featureManager>
 
+    <variable name="default.http.host" defaultValue="*" />
     <variable name="default.http.port" defaultValue="9080" />
     <variable name="default.https.port" defaultValue="9443" />
+    <variable name="default.db.host" defaultValue="localhost" />
+    <variable name="default.db.port" defaultValue="5432" />
+    <variable name="default.db.name" defaultValue="jeceatsdb" />
+    <variable name="default.db.user" defaultValue="dbuser" />
+    <variable name="default.db.password" defaultValue="dbpass" />
 
     <webApplication location="jeceats.war" contextRoot="/" />
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint id="defaultHttpEndpoint"
-                  host="*"
+                  host="${default.http.host}"
                   httpPort="${default.http.port}"
                   httpsPort="${default.https.port}" />
 
@@ -22,4 +29,17 @@
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime --> 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+
+    <library id="defaultJDBCLib">
+        <fileset dir="${shared.resource.dir}/" includes="postgresql*.jar" />
+    </library>
+
+    <dataSource id="defaultDataSource" jndiName="jdbc/defaultDataSource">
+        <jdbcDriver libraryRef="defaultJDBCLib" />
+        <properties serverName="${default.db.host}"
+                    portNumber="${default.db.port}"
+                    databaseName="${default.db.name}"
+                    user="${default.db.user}"
+                    password="${default.db.password}" />
+    </dataSource>
 </server>
