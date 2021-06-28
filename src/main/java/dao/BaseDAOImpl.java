@@ -13,7 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import common.AppException;
-import common.Constants.DBErrorType;
+import common.Constants.ErrorType;
 import entity.BaseEntity;
 
 public abstract class BaseDAOImpl<T extends BaseEntity> {
@@ -40,9 +40,9 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
             getEntityManager().persist(entity);
             flush();
         } catch (EntityExistsException e) {
-            throw createAppException(DBErrorType.ENTITY_EXISTS, e);
+            throw createAppException(ErrorType.ENTITY_EXISTS, e);
         } catch (PersistenceException e) {
-            throw createAppException(DBErrorType.PERSISTENCE, e);
+            throw createAppException(ErrorType.PERSISTENCE, e);
         }
     }
 
@@ -51,18 +51,14 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
     }
 
     public T update(T entity) {
-        Integer id = entity.getId();
-        T target = read(id)
-                .orElseThrow(() -> createAppException(DBErrorType.OPTIMISTIC_LOCK, new OptimisticLockException()));
         T updatedEntity = null;
         try {
-            entity.setVersion(target.getVersion());
             updatedEntity = getEntityManager().merge(entity);
             flush();
         } catch (OptimisticLockException e) {
-            throw createAppException(DBErrorType.OPTIMISTIC_LOCK, e);
+            throw createAppException(ErrorType.OPTIMISTIC_LOCK, e);
         } catch (PersistenceException e) {
-            throw createAppException(DBErrorType.PERSISTENCE, e);
+            throw createAppException(ErrorType.PERSISTENCE, e);
         }
         return updatedEntity;
     }
@@ -71,16 +67,16 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
         Integer id = entity.getId();
         read(id).ifPresentOrElse(target -> {
             try {
-                entity.setVersion(target.getVersion());
-                getEntityManager().remove(entity);
+                target.setVersion(entity.getVersion());
+                getEntityManager().remove(target);
                 flush();
             } catch (OptimisticLockException e) {
-                throw createAppException(DBErrorType.OPTIMISTIC_LOCK, e);
+                throw createAppException(ErrorType.OPTIMISTIC_LOCK, e);
             } catch (PersistenceException e) {
-                throw createAppException(DBErrorType.PERSISTENCE, e);
+                throw createAppException(ErrorType.PERSISTENCE, e);
             }
         }, () -> {
-            throw createAppException(DBErrorType.OPTIMISTIC_LOCK, new OptimisticLockException());
+            throw createAppException(ErrorType.OPTIMISTIC_LOCK, new OptimisticLockException());
         });
     }
 
@@ -90,7 +86,7 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
         try {
             resultList = getEntityManager().createQuery(jpql, tClass).getResultList();
         } catch (PersistenceException e) {
-            throw createAppException(DBErrorType.PERSISTENCE, e);
+            throw createAppException(ErrorType.PERSISTENCE, e);
         }
         return Objects.isNull(resultList) ? new ArrayList<T>() : resultList;
     }
@@ -103,8 +99,8 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
         getEntityManager().flush();
     }
 
-    protected AppException createAppException(DBErrorType errorType, Throwable cause) {
+    protected AppException createAppException(ErrorType errorType, Throwable cause) {
         String msg = ResourceBundle.getBundle("messages").getString(errorType.toString());
-        return new AppException(msg, cause);
+        return new AppException(errorType, msg, cause);
     }
 }

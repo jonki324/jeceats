@@ -13,4 +13,8 @@ public interface BaseDAO<T> {
     public abstract void delete(T entity);
 
     public abstract List<T> readAll();
+
+    public abstract void detach(T entity);
+
+    public abstract void flush();
 }

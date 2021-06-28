@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import common.AppException;
-import common.Constants.DBErrorType;
+import common.Constants.ErrorType;
 import entity.Item;
 
 class ItemDAOInvalidTest {
@@ -83,7 +83,7 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(DBErrorType.ENTITY_EXISTS.toString());
+        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.ENTITY_EXISTS.toString());
         assertTrue(e.getErrorInfo().hasError());
         assertEquals(expected, e.getErrorInfo().getErrors().get(0));
     }
@@ -107,7 +107,7 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(DBErrorType.OPTIMISTIC_LOCK.toString());
+        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.PERSISTENCE.toString());
         assertTrue(e1.getErrorInfo().hasError());
         assertEquals(expected, e1.getErrorInfo().getErrors().get(0));
 
@@ -122,6 +122,7 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
+        expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
         assertTrue(e2.getErrorInfo().hasError());
         assertEquals(expected, e2.getErrorInfo().getErrors().get(0));
     }
@@ -138,7 +139,7 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(DBErrorType.OPTIMISTIC_LOCK.toString());
+        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
         assertTrue(e1.getErrorInfo().hasError());
         assertEquals(expected, e1.getErrorInfo().getErrors().get(0));
 

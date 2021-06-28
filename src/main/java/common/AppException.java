@@ -1,5 +1,7 @@
 package common;
 
+import common.Constants.ErrorType;
+
 public class AppException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
@@ -9,14 +11,14 @@ public class AppException extends RuntimeException {
         super();
     }
 
-    public AppException(String msg) {
+    public AppException(ErrorType errorType, String msg) {
         super();
-        errInfo = new ErrorInfo(msg);
+        errInfo = new ErrorInfo(errorType, msg);
     }
 
-    public AppException(String msg, Throwable cause) {
+    public AppException(ErrorType errorType, String msg, Throwable cause) {
         super(cause);
-        errInfo = new ErrorInfo(msg);
+        errInfo = new ErrorInfo(errorType, msg);
     }
 
     public AppException(ErrorInfo errInfo) {

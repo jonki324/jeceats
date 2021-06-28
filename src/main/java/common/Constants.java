@@ -1,7 +1,7 @@
 package common;
 
 public class Constants {
-    public enum DBErrorType {
-        OPTIMISTIC_LOCK, ENTITY_EXISTS, PERSISTENCE,
+    public enum ErrorType {
+        OPTIMISTIC_LOCK, ENTITY_EXISTS, PERSISTENCE, NOT_EXIST
     }
 }
