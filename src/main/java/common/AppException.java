@@ -5,25 +5,38 @@ import common.Constants.ErrorType;
 public class AppException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    private ErrorType errorType;
+
     private ErrorInfo errInfo;
 
     public AppException() {
         super();
     }
 
-    public AppException(ErrorType errorType, String msg) {
+    public AppException(ErrorType errorType, String field, String msg) {
         super();
-        errInfo = new ErrorInfo(errorType, msg);
+        this.errorType = errorType;
+        errInfo = new ErrorInfo(field, msg);
     }
 
-    public AppException(ErrorType errorType, String msg, Throwable cause) {
+    public AppException(ErrorType errorType, String field, String msg, Throwable cause) {
         super(cause);
-        errInfo = new ErrorInfo(errorType, msg);
+        this.errorType = errorType;
+        errInfo = new ErrorInfo(field, msg);
     }
 
-    public AppException(ErrorInfo errInfo) {
+    public AppException(ErrorType errorType, ErrorInfo errInfo) {
         super();
+        this.errorType = errorType;
         this.errInfo = errInfo;
+    }
+
+    public ErrorType getErrorType() {
+        return errorType;
+    }
+
+    public void setErrorType(ErrorType errorType) {
+        this.errorType = errorType;
     }
 
     public ErrorInfo getErrorInfo() {

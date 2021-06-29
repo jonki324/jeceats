@@ -25,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import common.AppException;
+import common.Constants;
 import common.Constants.ErrorType;
 import entity.Item;
 
@@ -85,7 +86,7 @@ class ItemDAOInvalidTest {
         });
         String expected = ResourceBundle.getBundle("messages").getString(ErrorType.ENTITY_EXISTS.toString());
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -109,7 +110,7 @@ class ItemDAOInvalidTest {
         });
         String expected = ResourceBundle.getBundle("messages").getString(ErrorType.PERSISTENCE.toString());
         assertTrue(e1.getErrorInfo().hasError());
-        assertEquals(expected, e1.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e1.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
 
         AppException e2 = assertThrows(AppException.class, () -> {
             Item item = sut.read(2).get();
@@ -124,7 +125,7 @@ class ItemDAOInvalidTest {
         });
         expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
         assertTrue(e2.getErrorInfo().hasError());
-        assertEquals(expected, e2.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e2.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -139,9 +140,9 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
+        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.NOT_EXIST.toString());
         assertTrue(e1.getErrorInfo().hasError());
-        assertEquals(expected, e1.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e1.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
 
         AppException e2 = assertThrows(AppException.class, () -> {
             Item item = sut.read(2).get();
@@ -153,8 +154,9 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
+        expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
         assertTrue(e2.getErrorInfo().hasError());
-        assertEquals(expected, e2.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e2.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test

@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoSession;
 
 import common.AppException;
+import common.Constants;
 import common.Constants.ErrorType;
 import dao.ItemDAO;
 import dto.ItemDTO;
@@ -86,7 +87,7 @@ class ItemServiceTest {
         });
         String expected = ResourceBundle.getBundle("messages").getString(ErrorType.NOT_EXIST.toString());
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -113,7 +114,7 @@ class ItemServiceTest {
         });
         String expected = ResourceBundle.getBundle("messages").getString(ErrorType.NOT_EXIST.toString());
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test

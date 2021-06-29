@@ -16,7 +16,6 @@ import dto.ItemOutputDTO;
 import entity.Item;
 
 @RequestScoped
-@Transactional
 public class ItemService extends BaseService {
     @Inject
     private ItemDAO itemDAO;
@@ -33,12 +32,14 @@ public class ItemService extends BaseService {
         return new ItemOutputDTO(itemDTO);
     }
 
+    @Transactional
     public void add(ItemInputDTO itemDTO) {
         Item entity = convert(itemDTO);
         itemDAO.create(entity);
         itemDAO.detach(entity);
     }
 
+    @Transactional
     public void edit(ItemInputDTO itemDTO) {
         Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createAppException(ErrorType.NOT_EXIST, null));
         target.setName(itemDTO.getName());
@@ -49,6 +50,7 @@ public class ItemService extends BaseService {
         itemDAO.detach(entity);
     }
 
+    @Transactional
     public void remove(ItemInputDTO itemDTO) {
         Item entity = new Item();
         entity.setId(itemDTO.getId());

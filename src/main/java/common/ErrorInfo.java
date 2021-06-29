@@ -1,38 +1,33 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import common.Constants.ErrorType;
+import java.util.Map;
 
 public class ErrorInfo {
-    private ErrorType errorType;
-
-    private List<String> errors = new ArrayList<>();
+    private Map<String, List<String>> errors = new HashMap<String, List<String>>();
 
     public ErrorInfo() {
         super();
     }
 
-    public ErrorInfo(ErrorType errorType) {
-        this.errorType = errorType;
+    public ErrorInfo(String field, String errorMessage) {
+        addError(field, errorMessage);
     }
 
-    public ErrorInfo(ErrorType errorType, String msg) {
-        this.errorType = errorType;
-        addError(msg);
-    }
-
-    public ErrorType getErrorType() {
-        return errorType;
-    }
-
-    public List<String> getErrors() {
+    public Map<String, List<String>> getErrors() {
         return errors;
     }
 
-    public void addError(String msg) {
-        errors.add(msg);
+    public void addError(String field, String errorMessage) {
+        if (errors.containsKey(field)) {
+            errors.get(field).add(errorMessage);
+        } else {
+            List<String> errmsgList = new ArrayList<String>();
+            errmsgList.add(errorMessage);
+            errors.put(field, errmsgList);
+        }
     }
 
     public boolean hasError() {
