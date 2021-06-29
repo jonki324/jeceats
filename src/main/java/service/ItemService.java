@@ -28,7 +28,7 @@ public class ItemService extends BaseService {
 
     public ItemOutputDTO get(Integer id) {
         ItemDTO itemDTO = itemDAO.read(id).map(e -> convert(e))
-                .orElseThrow(() -> createAppException(ErrorType.NOT_EXIST, null));
+                .orElseThrow(() -> createAppException(ErrorType.NOT_EXIST));
         return new ItemOutputDTO(itemDTO);
     }
 
@@ -41,7 +41,7 @@ public class ItemService extends BaseService {
 
     @Transactional
     public void edit(ItemInputDTO itemDTO) {
-        Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createAppException(ErrorType.NOT_EXIST, null));
+        Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createAppException(ErrorType.NOT_EXIST));
         target.setName(itemDTO.getName());
         target.setPrice(itemDTO.getPrice());
         target.setDescription(itemDTO.getDescription());

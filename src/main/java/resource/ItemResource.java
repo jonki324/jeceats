@@ -44,6 +44,7 @@ public class ItemResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response add(ItemInputDTO item) {
+        validate(item);
         ItemService.add(item);
         return Response.status(Status.CREATED).build();
     }
@@ -54,6 +55,7 @@ public class ItemResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response edit(ItemInputDTO item, @PathParam("id") Integer id) {
         item.setId(id);
+        validate(item);
         ItemService.edit(item);
         return Response.status(Status.NO_CONTENT).build();
     }

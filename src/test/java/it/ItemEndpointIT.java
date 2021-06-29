@@ -107,6 +107,20 @@ class ItemEndpointIT {
     }
 
     @Test
+    void testAddInvalid() {
+        Map<String, Object> json = Map.of("name", "", "price", "400", "description", "desc4");
+        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+
+        json = Map.of("name", "name4", "price", "-1", "description", "desc4");
+        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+        json = Map.of("name", "name4", "price", "10000", "description", "desc4");
+        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+
+        json = Map.of("name", "name4", "price", "400", "description", "");
+        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+    }
+
+    @Test
     void testEdit() throws Exception {
         Map<String, Object> json = Map.of("name", "name22", "price", "222", "description", "desc22", "version", "1");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().put("/{id}").then()

@@ -31,6 +31,7 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
                     status = Status.CONFLICT;
                     break;
                 case NOT_EXIST:
+                case VALIDATION_ERROR:
                     status = Status.BAD_REQUEST;
                     break;
                 case PERSISTENCE:
