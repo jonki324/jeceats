@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,15 +21,24 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './layout/header.component';
 import { FooterComponent } from './layout/footer.component';
+import { ItemListComponent } from './item-list/item-list.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { ItemEditComponent } from './item-edit/item-edit.component';
+import { ItemCreateComponent } from './item-create/item-create.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    ItemListComponent,
+    ItemDetailComponent,
+    ItemEditComponent,
+    ItemCreateComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     MdbCarouselModule,
     MdbCheckboxModule,

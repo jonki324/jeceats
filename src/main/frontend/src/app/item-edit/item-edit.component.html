@@ -1,0 +1,30 @@
+<div class="container">
+  <form>
+    <div class="row mb-3">
+      <label for="id" class="col-2 col-form-label">ID</label>
+      <div class="col-10">
+        <input type="number" name="id" id="id" class="form-control-plaintext" [(ngModel)]="item.id" readonly>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="name" class="col-2 col-form-label">Name</label>
+      <div class="col-10">
+        <input type="text" name="name" id="name" class="form-control" [(ngModel)]="item.name">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="price" class="col-2 col-form-label">Price</label>
+      <div class="col-10">
+        <input type="number" name="price" id="price" class="form-control" [(ngModel)]="item.price">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="description" class="col-2 col-form-label">Description</label>
+      <div class="col-10">
+        <textarea name="description" id="description" class="form-control" [(ngModel)]="item.description"></textarea>
+      </div>
+    </div>
+    <a class="btn btn-light me-1" routerLink="/items">Back</a>
+    <a class="btn btn-primary" routerLink="/items">Edit</a>
+  </form>
+</div>
