@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Item } from '../models/item.model';
+import { Item } from '../../models/item.model';
 
 @Component({
-  selector: 'app-item-detail',
-  templateUrl: './item-detail.component.html',
-  styleUrls: ['./item-detail.component.css']
+  selector: 'app-item-edit',
+  templateUrl: './item-edit.component.html',
+  styleUrls: ['./item-edit.component.css']
 })
-export class ItemDetailComponent implements OnInit {
+export class ItemEditComponent implements OnInit {
   item: Item = {
     id: 1,
     name: "name1",
@@ -14,7 +14,6 @@ export class ItemDetailComponent implements OnInit {
     description: "desc1",
     version: 1
   }
-
   constructor() { }
 
   ngOnInit(): void {
