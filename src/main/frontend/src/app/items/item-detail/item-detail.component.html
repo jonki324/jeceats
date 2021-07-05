@@ -24,6 +24,6 @@
         <input type="text" name="description" id="description" class="form-control-plaintext" [(ngModel)]="item.description" readonly>
       </div>
     </div>
-    <a class="btn btn-light" routerLink="/items">Back</a>
+    <button class="btn btn-light" (click)="goBack()">Back</button>
   </form>
 </div>

@@ -1,4 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ItemsService } from 'src/app/services/items.service';
 import { Item } from '../../models/item.model';
 
 @Component({
@@ -8,16 +11,31 @@ import { Item } from '../../models/item.model';
 })
 export class ItemDetailComponent implements OnInit {
   item: Item = {
-    id: 1,
-    name: "name1",
-    price: 100,
-    description: "desc1",
-    version: 1
+    id: null,
+    name: "",
+    price: 0,
+    description: "",
+    version: null
   }
 
-  constructor() { }
+  constructor(
+    private itemsService: ItemsService,
+    private route: ActivatedRoute,
+    private location: Location
+  ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      const id = Number(params.get('id'))
+      this.get(id)
+    })
   }
 
+  goBack(): void {
+    this.location.back()
+  }
+
+  get(id: number): void {
+    this.itemsService.get(id).subscribe(item => this.item = item.item)
+  }
 }

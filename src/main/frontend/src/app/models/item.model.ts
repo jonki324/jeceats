@@ -5,3 +5,11 @@ export interface Item {
   description: string;
   version: number | null;
 }
+
+export interface ItemOne {
+  item: Item
+}
+
+export interface ItemList {
+  items: Item[];
+}

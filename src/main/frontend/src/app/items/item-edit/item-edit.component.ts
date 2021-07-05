@@ -1,4 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ItemsService } from 'src/app/services/items.service';
 import { Item } from '../../models/item.model';
 
 @Component({
@@ -14,9 +17,28 @@ export class ItemEditComponent implements OnInit {
     description: "desc1",
     version: 1
   }
-  constructor() { }
+  constructor(
+    private itemsService: ItemsService,
+    private location: Location,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      const id = Number(params.get('id'))
+      this.get(id)
+    })
   }
 
+  goBack(): void {
+    this.location.back()
+  }
+
+  get(id: number): void {
+    this.itemsService.get(id).subscribe(item => this.item = item.item)
+  }
+
+  edit(): void {
+    this.itemsService.update(this.item).subscribe(() => this.goBack())
+  }
 }

@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ItemsService } from 'src/app/services/items.service';
 import { Item } from '../../models/item.model';
 
 @Component({
@@ -14,9 +16,20 @@ export class ItemCreateComponent implements OnInit {
     description: "",
     version: null
   }
-  constructor() { }
+
+  constructor(
+    private itemsService: ItemsService,
+    private location: Location
+  ) { }
 
   ngOnInit(): void {
   }
 
+  goBack(): void {
+    this.location.back()
+  }
+
+  add(): void {
+    this.itemsService.add(this.item).subscribe(() => this.goBack())
+  }
 }
