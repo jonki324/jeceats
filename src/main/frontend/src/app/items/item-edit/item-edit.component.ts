@@ -11,12 +11,13 @@ import { Item } from '../../models/item.model';
 })
 export class ItemEditComponent implements OnInit {
   item: Item = {
-    id: 1,
-    name: "name1",
-    price: 100,
-    description: "desc1",
-    version: 1
+    id: null,
+    name: "",
+    price: 0,
+    description: "",
+    version: null
   }
+
   constructor(
     private itemsService: ItemsService,
     private location: Location,
@@ -35,7 +36,8 @@ export class ItemEditComponent implements OnInit {
   }
 
   get(id: number): void {
-    this.itemsService.get(id).subscribe(item => this.item = item.item)
+    this.itemsService.get(id).subscribe(item => this.item = item,
+      error => this.goBack())
   }
 
   edit(): void {

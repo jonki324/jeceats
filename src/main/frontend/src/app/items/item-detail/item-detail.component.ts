@@ -36,6 +36,7 @@ export class ItemDetailComponent implements OnInit {
   }
 
   get(id: number): void {
-    this.itemsService.get(id).subscribe(item => this.item = item.item)
+    this.itemsService.get(id).subscribe(item => this.item = item,
+      error => this.goBack())
   }
 }

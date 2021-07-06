@@ -17,7 +17,8 @@ export class ItemListComponent implements OnInit {
   }
 
   getAll(): void {
-    this.itemsService.getAll().subscribe(items => this.items = items.items)
+    this.itemsService.getAll().subscribe(items => this.items = items,
+      error => this.items = [])
   }
 
   delete(item: Item): void {

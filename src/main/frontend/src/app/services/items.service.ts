@@ -1,58 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Item, ItemList, ItemOne } from '../models/item.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Item } from '../models/item.model';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
-  private apiUrl = '/api/items'
+  private apiUrl = '/items'
 
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  constructor(private apiService: ApiService) { }
+
+  getAll(): Observable<Item[]> {
+    return this.apiService.get(this.apiUrl).pipe(map((data => data.items)))
   }
 
-  constructor(private http: HttpClient) { }
-
-  getAll(): Observable<ItemList> {
-    return this.http.get<ItemList>(this.apiUrl).pipe(
-      catchError(this.handleError<ItemList>('getAll', { items: [] }))
-    )
-  }
-
-  get(id: number): Observable<ItemOne> {
+  get(id: number): Observable<Item> {
     const url = `${this.apiUrl}/${id}`
-    return this.http.get<ItemOne>(url).pipe(
-      catchError(this.handleError<any>('get'))
-    )
+    return this.apiService.get(url).pipe(map((data => data.item)))
   }
 
   add(item: Item): Observable<any> {
-    return this.http.post(this.apiUrl, item, this.httpOptions).pipe(
-      catchError(this.handleError<any>('add'))
-    )
+    return this.apiService.post(this.apiUrl, item)
   }
 
   update(item: Item): Observable<any> {
     const url = `${this.apiUrl}/${item.id}`
-    return this.http.put(url, item, this.httpOptions).pipe(
-      catchError(this.handleError<any>('update'))
-    )
+    return this.apiService.put(url, item)
   }
 
   delete(item: Item): Observable<any> {
     const url = `${this.apiUrl}/${item.id}`
-    return this.http.delete(url, { ...this.httpOptions, body: item }).pipe(
-      catchError(this.handleError<any>('delete'))
-    )
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error)
-      return of(result as T)
-    }
+    return this.apiService.delete(url, item)
   }
 }
