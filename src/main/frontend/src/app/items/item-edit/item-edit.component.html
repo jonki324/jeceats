@@ -1,30 +1,74 @@
 <div class="container">
-  <form>
-    <div class="row mb-3">
-      <label for="id" class="col-2 col-form-label">ID</label>
-      <div class="col-10">
-        <input type="number" name="id" id="id" class="form-control-plaintext" [(ngModel)]="item.id" readonly>
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          <h5>Item Info</h5>
+        </div>
+        <div class="card-body">
+          <form #form="ngForm">
+            <div class="container">
+              <div class="row mb-3">
+                <label for="id" class="col-2 col-form-label">ID</label>
+                <div class="col-10">
+                  <input type="number" name="id" id="id" class="form-control-plaintext" [(ngModel)]="item.id" readonly>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-2 col-form-label">Name</label>
+                <div class="col-10">
+                  <input type="text" name="name" id="name" class="form-control" required
+                    [(ngModel)]="item.name" #name="ngModel"
+                    [ngClass]="{ 'is-invalid': (name.invalid && (name.dirty || name.touched)) || (errors.name?.length && name.pristine) }"
+                  >
+                  <div *ngIf="name.invalid && (name.dirty || name.touched)" class="invalid-feedback">
+                    <div *ngIf="name.errors?.required">未入力にすることはできません</div>
+                  </div>
+                  <div *ngIf="errors.name?.length && name.pristine" class="invalid-feedback">
+                    <div *ngFor="let err of errors.name">{{ err }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="price" class="col-2 col-form-label">Price</label>
+                <div class="col-10">
+                  <input type="number" name="price" id="price" class="form-control" required min="0" max="9999"
+                    [(ngModel)]="item.price" #price="ngModel"
+                    [ngClass]="{ 'is-invalid': (price.invalid && (price.dirty || price.touched)) || (errors.price?.length && price.pristine) }"
+                  >
+                  <div *ngIf="price.invalid && (price.dirty || price.touched)" class="invalid-feedback">
+                    <div *ngIf="price.errors?.required">未入力にすることはできません</div>
+                    <div *ngIf="price.errors?.min">0以上の値を入力してください</div>
+                    <div *ngIf="price.errors?.max">9999以下の値を入力してください</div>
+                  </div>
+                  <div *ngIf="errors.price?.length && price.pristine" class="invalid-feedback">
+                    <div *ngFor="let err of errors.price">{{ err }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="description" class="col-2 col-form-label">Description</label>
+                <div class="col-10">
+                  <textarea name="description" id="description" class="form-control" required
+                    [(ngModel)]="item.description" #description="ngModel"
+                    [ngClass]="{ 'is-invalid': (description.invalid && (description.dirty || description.touched)) || (errors.description?.length && description.pristine)}"
+                  ></textarea>
+                  <div *ngIf="description.invalid && (description.dirty || description.touched)" class="invalid-feedback">
+                    <div *ngIf="description.errors?.required">未入力にすることはできません</div>
+                  </div>
+                  <div *ngIf="errors.description?.length && description.pristine" class="invalid-feedback">
+                    <div *ngFor="let err of errors.description">{{ err }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-light me-2" (click)="goBack()">Back</button>
+                <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onSubmit(form)">Edit</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-    <div class="row mb-3">
-      <label for="name" class="col-2 col-form-label">Name</label>
-      <div class="col-10">
-        <input type="text" name="name" id="name" class="form-control" [(ngModel)]="item.name">
-      </div>
-    </div>
-    <div class="row mb-3">
-      <label for="price" class="col-2 col-form-label">Price</label>
-      <div class="col-10">
-        <input type="number" name="price" id="price" class="form-control" [(ngModel)]="item.price">
-      </div>
-    </div>
-    <div class="row mb-3">
-      <label for="description" class="col-2 col-form-label">Description</label>
-      <div class="col-10">
-        <textarea name="description" id="description" class="form-control" [(ngModel)]="item.description"></textarea>
-      </div>
-    </div>
-    <button class="btn btn-light me-1" (click)="goBack()">Back</button>
-    <button class="btn btn-primary" (click)="edit()">Edit</button>
-  </form>
+  </div>
 </div>
