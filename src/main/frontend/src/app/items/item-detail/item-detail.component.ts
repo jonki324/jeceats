@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { ItemsService } from 'src/app/services/items.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { Item } from '../../models/item.model';
 
 @Component({
@@ -10,18 +11,14 @@ import { Item } from '../../models/item.model';
   styleUrls: ['./item-detail.component.css']
 })
 export class ItemDetailComponent implements OnInit {
-  item: Item = {
-    id: null,
-    name: "",
-    price: 0,
-    description: "",
-    version: null
-  }
+  item: Item = {} as Item
 
   constructor(
     private itemsService: ItemsService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private router: Router,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +33,14 @@ export class ItemDetailComponent implements OnInit {
   }
 
   get(id: number): void {
-    this.itemsService.get(id).subscribe(item => this.item = item,
-      error => this.goBack())
+    this.itemsService.get(id).subscribe(
+      item => this.item = item,
+      errors => {
+        errors.errors?.system?.forEach((err: string) => {
+          this.toastService.danger(err)
+        })
+        this.router.navigate(['/items'])
+      }
+    )
   }
 }

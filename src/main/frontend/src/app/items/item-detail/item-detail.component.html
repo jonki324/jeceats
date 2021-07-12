@@ -1,29 +1,56 @@
 <div class="container">
-  <form>
-    <div class="row mb-3">
-      <label for="id" class="col-2 col-form-label">ID</label>
-      <div class="col-10">
-        <input type="number" name="id" id="id" class="form-control-plaintext" [(ngModel)]="item.id" readonly>
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          <h5>Item Info</h5>
+        </div>
+        <div class="card-body">
+          <form #form="ngForm">
+            <div class="container">
+              <div class="row mb-3">
+                <label for="id" class="col-2 col-form-label">ID</label>
+                <div class="col-10">
+                  <input type="number" name="id" id="id" class="form-control-plaintext" readonly
+                    [(ngModel)]="item.id"
+                    placeholder="1"
+                  >
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-2 col-form-label">Name</label>
+                <div class="col-10">
+                  <input type="text" name="name" id="name" class="form-control-plaintext" readonly
+                    [(ngModel)]="item.name" #name="ngModel"
+                    placeholder="name"
+                  >
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="price" class="col-2 col-form-label">Price</label>
+                <div class="col-10">
+                  <input type="number" name="price" id="price" class="form-control-plaintext" readonly
+                    [(ngModel)]="item.price" #price="ngModel"
+                    placeholder="100"
+                  >
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="description" class="col-2 col-form-label">Description</label>
+                <div class="col-10">
+                  <textarea name="description" id="description" class="form-control-plaintext" readonly
+                    [(ngModel)]="item.description" #description="ngModel"
+                    placeholder="desc"
+                    ></textarea>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-light me-2" (click)="goBack()">Back</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-    <div class="row mb-3">
-      <label for="name" class="col-2 col-form-label">Name</label>
-      <div class="col-10">
-        <input type="text" name="name" id="name" class="form-control-plaintext" [(ngModel)]="item.name" readonly>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <label for="price" class="col-2 col-form-label">Price</label>
-      <div class="col-10">
-        <input type="number" name="price" id="price" class="form-control-plaintext" [(ngModel)]="item.price" readonly>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <label for="description" class="col-2 col-form-label">Description</label>
-      <div class="col-10">
-        <input type="text" name="description" id="description" class="form-control-plaintext" [(ngModel)]="item.description" readonly>
-      </div>
-    </div>
-    <button class="btn btn-light" (click)="goBack()">Back</button>
-  </form>
+  </div>
 </div>

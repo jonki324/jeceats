@@ -1,6 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { filter, mergeMap } from 'rxjs/operators';
+import { DialogService } from 'src/app/services/dialog.service';
 import { ItemsService } from 'src/app/services/items.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { Item } from '../../models/item.model';
 
 @Component({
@@ -9,17 +13,15 @@ import { Item } from '../../models/item.model';
   styleUrls: ['./item-create.component.css']
 })
 export class ItemCreateComponent implements OnInit {
-  item: Item = {
-    id: null,
-    name: "",
-    price: 0,
-    description: "",
-    version: null
-  }
+  item: Item = {} as Item
+
+  errors: any = {}
 
   constructor(
     private itemsService: ItemsService,
-    private location: Location
+    private location: Location,
+    private dialogService: DialogService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -29,7 +31,25 @@ export class ItemCreateComponent implements OnInit {
     this.location.back()
   }
 
-  add(): void {
-    this.itemsService.add(this.item).subscribe(() => this.goBack())
+  onSubmit(form: NgForm): void {
+    const confirmMsg = '登録しますか？'
+    const successMsg = '登録しました'
+    this.dialogService.open(confirmMsg).pipe(
+      filter(isOK => isOK),
+      mergeMap(() => this.itemsService.add(this.item))
+    ).subscribe(
+      () => {
+        this.toastService.success(successMsg)
+        this.goBack()
+      },
+      errors => {
+        this.errors = errors.errors ?? {}
+        this.errors.system?.forEach((err: string) => {
+          this.toastService.danger(err)
+        })
+        form.form.markAsPristine()
+        form.form.markAsUntouched()
+      }
+    )
   }
 }

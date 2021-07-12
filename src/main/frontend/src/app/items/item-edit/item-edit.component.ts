@@ -42,10 +42,10 @@ export class ItemEditComponent implements OnInit {
     this.itemsService.get(id).subscribe(
       item => this.item = item,
       errors => {
-        this.errors = errors.errors
-        if (this.errors?.system !== '') {
-          this.toastService.danger(this.errors?.system)
-        }
+        this.errors = errors.errors ?? {}
+        this.errors.system?.foreach((err: string) => {
+          this.toastService.danger(err)
+        })
         this.router.navigate(['/items'])
       }
     )
@@ -63,10 +63,10 @@ export class ItemEditComponent implements OnInit {
         this.goBack()
       },
       errors => {
-        this.errors = errors.errors
-        if (this.errors?.system !== '') {
-          this.toastService.danger(this.errors?.system)
-        }
+        this.errors = errors.errors ?? {}
+        this.errors.system?.foreach((err: string) => {
+          this.toastService.danger(err)
+        })
         form.form.markAsPristine()
         form.form.markAsUntouched()
       }

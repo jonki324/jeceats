@@ -11,7 +11,10 @@
               <div class="row mb-3">
                 <label for="id" class="col-2 col-form-label">ID</label>
                 <div class="col-10">
-                  <input type="number" name="id" id="id" class="form-control-plaintext" [(ngModel)]="item.id" readonly>
+                  <input type="number" name="id" id="id" class="form-control-plaintext" readonly
+                    [(ngModel)]="item.id"
+                    placeholder="1"
+                  >
                 </div>
               </div>
               <div class="row mb-3">
@@ -20,6 +23,7 @@
                   <input type="text" name="name" id="name" class="form-control" required
                     [(ngModel)]="item.name" #name="ngModel"
                     [ngClass]="{ 'is-invalid': (name.invalid && (name.dirty || name.touched)) || (errors.name?.length && name.pristine) }"
+                    placeholder="name"
                   >
                   <div *ngIf="name.invalid && (name.dirty || name.touched)" class="invalid-feedback">
                     <div *ngIf="name.errors?.required">未入力にすることはできません</div>
@@ -35,6 +39,7 @@
                   <input type="number" name="price" id="price" class="form-control" required min="0" max="9999"
                     [(ngModel)]="item.price" #price="ngModel"
                     [ngClass]="{ 'is-invalid': (price.invalid && (price.dirty || price.touched)) || (errors.price?.length && price.pristine) }"
+                    placeholder="100"
                   >
                   <div *ngIf="price.invalid && (price.dirty || price.touched)" class="invalid-feedback">
                     <div *ngIf="price.errors?.required">未入力にすることはできません</div>
@@ -52,7 +57,8 @@
                   <textarea name="description" id="description" class="form-control" required
                     [(ngModel)]="item.description" #description="ngModel"
                     [ngClass]="{ 'is-invalid': (description.invalid && (description.dirty || description.touched)) || (errors.description?.length && description.pristine)}"
-                  ></textarea>
+                    placeholder="desc"
+                    ></textarea>
                   <div *ngIf="description.invalid && (description.dirty || description.touched)" class="invalid-feedback">
                     <div *ngIf="description.errors?.required">未入力にすることはできません</div>
                   </div>
