@@ -8,6 +8,8 @@
         <feature>jaxrs-2.1</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpJwt-1.2</feature>
     </featureManager>
 
     <variable name="default.http.host" defaultValue="*" />
@@ -18,6 +20,8 @@
     <variable name="default.db.name" defaultValue="jeceatsdb" />
     <variable name="default.db.user" defaultValue="dbuser" />
     <variable name="default.db.password" defaultValue="dbpass" />
+    <variable name="default.keystore.secret" defaultValue="secret" />
+    <variable name="default.jwt.iss" defaultValue="http://localhost:9080" />
 
     <webApplication location="jeceats.war" contextRoot="/" />
 
@@ -45,4 +49,8 @@
                     user="${default.db.user}"
                     password="${default.db.password}" />
     </dataSource>
+    
+    <keyStore id="defaultKeyStore" password="${default.keystore.secret}" />
+    
+    <jwtBuilder id="defaultJWT" issuer="${default.jwt.iss}" expiry="24h"/>
 </server>

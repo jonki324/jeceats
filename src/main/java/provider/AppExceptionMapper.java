@@ -32,6 +32,7 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
                     break;
                 case NOT_EXIST:
                 case VALIDATION_ERROR:
+                case LOGIN_ERROR:
                     status = Status.BAD_REQUEST;
                     break;
                 case PERSISTENCE:

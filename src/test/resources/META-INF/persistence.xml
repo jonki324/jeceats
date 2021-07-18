@@ -7,6 +7,7 @@
     <persistence-unit name="jpa-unit" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>entity.Item</class>
+        <class>entity.User</class>
         <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
