@@ -29,7 +29,7 @@
 
       <form class="d-flex">
         <ng-container  *ngIf="isAuthenticated | async; else elseBlock">
-          <a class="navbar-text me-2" routerLink="/">
+          <a class="navbar-text me-2" routerLink="/users/current">
             {{ (currentUser | async)?.name }}
           </a>
           <button type="button" class="btn btn-outline-success" (click)="onLogout()">Logout</button>
