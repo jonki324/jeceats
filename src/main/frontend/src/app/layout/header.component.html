@@ -1,11 +1,9 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">JEC Eats</a>
+      <a class="navbar-brand" routerLink="">JEC Eats</a>
 
-      <button
-        class="navbar-toggler"
-        type="button"
+      <button type="button" class="navbar-toggler"
         (click)="basicNavbar.toggle()"
         aria-expanded="false"
         aria-label="Toggle navigation"
@@ -13,27 +11,33 @@
         <i class="fas fa-bars"></i>
       </button>
 
-      <div
-        class="collapse navbar-collapse"
-        id="navbarSupportedContent"
+      <div id="navbarSupportedContent" class="collapse navbar-collapse"
         mdbCollapse
         #basicNavbar="mdbCollapse"
       >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/items" routerLinkActive="active">Items</a>
+          <li class="nav-item" *ngFor="let item of navItems">
+            <a class="nav-link" [routerLink]="item.url" routerLinkActive="active"
+              #navItem="routerLinkActive"
+              [attr.aria-current]="navItem.isActive ? 'page' : undefined"
+            >
+              {{ item.title }}
+            </a>
           </li>
         </ul>
       </div>
+
+      <form class="d-flex">
+        <ng-container  *ngIf="isAuthenticated | async; else elseBlock">
+          <a class="navbar-text me-2" routerLink="/">
+            {{ (currentUser | async)?.name }}
+          </a>
+          <button type="button" class="btn btn-outline-success" (click)="onLogout()">Logout</button>
+        </ng-container>
+        <ng-template #elseBlock>
+          <button type="button" class="btn btn-outline-success" (click)="onLogin()">Login</button>
+        </ng-template>
+      </form>
 
     </div>
   </nav>

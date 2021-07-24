@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -8,9 +8,6 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ApiService {
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-type': 'application/json' })
-  }
 
   constructor(private http: HttpClient) { }
 
@@ -20,22 +17,22 @@ export class ApiService {
   }
 
   post(path: string, body: Object = {}): Observable<any> {
-    return this.http.post(`${environment.apiUrl}${path}`, body, this.httpOptions)
+    return this.http.post(`${environment.apiUrl}${path}`, body)
       .pipe(catchError(this.handleError))
   }
 
   put(path: string, body: Object = {}): Observable<any> {
-    return this.http.put(`${environment.apiUrl}${path}`, body, this.httpOptions)
+    return this.http.put(`${environment.apiUrl}${path}`, body)
       .pipe(catchError(this.handleError))
   }
 
   delete(path: string, body: Object = {}): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}${path}`, { ...this.httpOptions, body })
+    return this.http.delete(`${environment.apiUrl}${path}`, { body })
       .pipe(catchError(this.handleError))
   }
 
   private handleError(error: any) {
     console.error(error);
-    return throwError(error.error)
+    return throwError(error.error ?? error)
   }
 }

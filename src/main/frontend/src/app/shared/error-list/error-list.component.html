@@ -1,0 +1,8 @@
+<ng-container *ngIf="model.invalid && (model.dirty || model.touched)">
+  <div *ngIf="model.errors?.required">未入力にすることはできません</div>
+  <div *ngIf="model.errors?.min">0以上の値を入力してください</div>
+  <div *ngIf="model.errors?.max">9999以下の値を入力してください</div>
+</ng-container>
+<ng-container *ngIf="list.length && model.pristine">
+  <div *ngFor="let err of list">{{ err }}</div>
+</ng-container>

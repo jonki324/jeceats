@@ -4,6 +4,7 @@ import { ItemListComponent } from './item-list/item-list.component';
 import { ItemCreateComponent } from './item-create/item-create.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { ItemEditComponent } from './item-edit/item-edit.component';
+import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
   {
@@ -12,7 +13,8 @@ const routes: Routes = [
   },
   {
     path: 'create',
-    component: ItemCreateComponent
+    component: ItemCreateComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: ':id',

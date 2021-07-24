@@ -10,7 +10,7 @@ public class JwtGenerator {
         jb.subject(loginId);
         jb.claim("upn", loginId);
         jb.claim("id", id);
-        jb.claim("role", role);
+        jb.claim("groups", role);
         return jb.buildJwt().compact();
     }
 }

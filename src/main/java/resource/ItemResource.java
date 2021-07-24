@@ -1,5 +1,6 @@
 package resource;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -35,6 +36,7 @@ public class ItemResource extends BaseResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("STAFF")
     public Response get(@PathParam("id") Integer id) {
         ItemOutputDTO output = ItemService.get(id);
         return Response.status(Status.OK).entity(output).build();

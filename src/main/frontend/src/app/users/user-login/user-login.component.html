@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header">
+          <h5>Login</h5>
+        </div>
+        <div class="card-body">
+          <form #form="ngForm">
+            <div class="container">
+              <div class="row mb-3">
+                <label for="loginId" class="col-2 col-form-label">LoginID</label>
+                <div class="col-10">
+                  <input type="text" name="loginId" id="loginId" class="form-control" required
+                    [(ngModel)]="login.loginId" #loginId="ngModel"
+                    appInvalidStyle [errors]="errors"
+                    placeholder="LoginID"
+                  >
+                  <app-error-list [errors]="errors" [model]="loginId"></app-error-list>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="password" class="col-2 col-form-label">Password</label>
+                <div class="col-10">
+                  <input type="password" name="password" id="password" class="form-control" required
+                    [(ngModel)]="login.password" #password="ngModel"
+                    appInvalidStyle [errors]="errors"
+                    placeholder="Password"
+                  >
+                  <app-error-list [errors]="errors" [model]="password"></app-error-list>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onSubmit(form)">Login</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

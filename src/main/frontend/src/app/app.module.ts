@@ -25,6 +25,8 @@ import { SpinnerComponent } from './layout/spinner.component';
 import { SpinnerService } from './services/spinner.service';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
 import { ToastComponent } from './layout/toast.component';
+import { HttpTokenInterceptor } from './interceptors/http-token.interceptor';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -52,9 +54,15 @@ import { ToastComponent } from './layout/toast.component';
     MdbTabsModule,
     MdbTooltipModule,
     MdbValidationModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SharedModule
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpTokenInterceptor,
+      multi: true
+    },
     SpinnerService,
     {
       provide: HTTP_INTERCEPTORS,
