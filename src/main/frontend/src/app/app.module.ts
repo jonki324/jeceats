@@ -19,8 +19,6 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SpinnerComponent } from './layout/spinner.component';
-import { SpinnerService } from './services/spinner.service';
 import { SpinnerInterceptor } from './core/interceptors/spinner.interceptor';
 import { ToastComponent } from './layout/toast.component';
 import { HttpTokenInterceptor } from './core/interceptors/http-token.interceptor';
@@ -30,7 +28,6 @@ import { CoreModule } from './core/core.module';
 @NgModule({
   declarations: [
     AppComponent,
-    SpinnerComponent,
     ToastComponent
   ],
   imports: [
@@ -61,7 +58,6 @@ import { CoreModule } from './core/core.module';
       useClass: HttpTokenInterceptor,
       multi: true
     },
-    SpinnerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SpinnerInterceptor,

@@ -4,13 +4,15 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { CoreRoutingModule } from './core-routing.module';
+import { SpinnerComponent } from './layout/spinner/spinner.component';
 
 
 
 @NgModule({
   declarations: [
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,8 @@ import { CoreRoutingModule } from './core-routing.module';
   ],
   exports: [
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    SpinnerComponent
   ]
 })
 export class CoreModule { }
