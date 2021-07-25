@@ -10,7 +10,7 @@ import { EMPTY, Observable, throwError } from 'rxjs';
 import { JwtService } from '../../services/jwt.service';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '../services/toast.service';
 
 @Injectable()
 export class HttpTokenInterceptor implements HttpInterceptor {

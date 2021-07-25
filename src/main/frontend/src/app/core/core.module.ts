@@ -6,6 +6,7 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { CoreRoutingModule } from './core-routing.module';
 import { SpinnerComponent } from './layout/spinner/spinner.component';
 import { DialogComponent } from './layout/dialog/dialog.component';
+import { ToastComponent } from './layout/toast/toast.component';
 
 
 
@@ -14,7 +15,8 @@ import { DialogComponent } from './layout/dialog/dialog.component';
     FooterComponent,
     HeaderComponent,
     SpinnerComponent,
-    DialogComponent
+    DialogComponent,
+    ToastComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +26,8 @@ import { DialogComponent } from './layout/dialog/dialog.component';
   exports: [
     FooterComponent,
     HeaderComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ToastComponent
   ]
 })
 export class CoreModule { }

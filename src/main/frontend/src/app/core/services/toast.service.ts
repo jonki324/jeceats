@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { STYLE, ToastConfig } from '../layout/toast-config.model';
+import { STYLE, ToastConfig } from './toast-config.model';
 
 @Injectable({
   providedIn: 'root'
