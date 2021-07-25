@@ -19,20 +19,17 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HeaderComponent } from './layout/header.component';
-import { FooterComponent } from './layout/footer.component';
 import { SpinnerComponent } from './layout/spinner.component';
 import { SpinnerService } from './services/spinner.service';
-import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
+import { SpinnerInterceptor } from './core/interceptors/spinner.interceptor';
 import { ToastComponent } from './layout/toast.component';
-import { HttpTokenInterceptor } from './interceptors/http-token.interceptor';
+import { HttpTokenInterceptor } from './core/interceptors/http-token.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    FooterComponent,
     SpinnerComponent,
     ToastComponent
   ],
@@ -55,6 +52,7 @@ import { SharedModule } from './shared/shared.module';
     MdbTooltipModule,
     MdbValidationModule,
     BrowserAnimationsModule,
+    CoreModule,
     SharedModule
   ],
   providers: [

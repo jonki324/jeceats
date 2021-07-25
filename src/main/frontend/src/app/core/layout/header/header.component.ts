@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { DialogService } from '../services/dialog.service';
-import { UsersService } from '../users/shared/users.service';
+import { DialogService } from '../../../services/dialog.service';
+import { UsersService } from '../../../users/shared/users.service';
 
 @Component({
   selector: 'app-layout-header',
-  templateUrl: './header.component.html'
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
   navItems = [
