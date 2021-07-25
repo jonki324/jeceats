@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user.model';
-import { UsersService } from 'src/app/services/users.service';
+import { User } from '../shared/user.model';
+import { UsersService } from '../shared/users.service';
 
 @Component({
   selector: 'app-user-current',

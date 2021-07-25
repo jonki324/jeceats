@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Login } from 'src/app/models/login.model';
-import { ToastService } from 'src/app/services/toast.service';
-import { UsersService } from 'src/app/services/users.service';
+import { Login } from '../shared/login.model';
+import { ToastService } from '../../services/toast.service';
+import { UsersService } from '../shared/users.service';
 
 @Component({
   selector: 'app-user-login',
