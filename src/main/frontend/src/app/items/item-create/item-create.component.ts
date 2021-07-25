@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { filter, mergeMap } from 'rxjs/operators';
 import { DialogService } from 'src/app/services/dialog.service';
-import { ItemsService } from 'src/app/services/items.service';
+import { ItemsService } from 'src/app/items/shared/items.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { Item } from '../../models/item.model';
+import { Item } from '../shared/item.model';
 
 @Component({
   selector: 'app-item-create',

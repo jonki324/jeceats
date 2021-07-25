@@ -7,6 +7,7 @@ import { ItemListComponent } from './item-list/item-list.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { ItemEditComponent } from './item-edit/item-edit.component';
 import { ItemCreateComponent } from './item-create/item-create.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -20,7 +21,8 @@ import { ItemCreateComponent } from './item-create/item-create.component';
   imports: [
     CommonModule,
     FormsModule,
-    ItemsRoutingModule
+    ItemsRoutingModule,
+    SharedModule
   ]
 })
 export class ItemsModule { }

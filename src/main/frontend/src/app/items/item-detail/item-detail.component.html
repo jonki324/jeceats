@@ -12,7 +12,7 @@
                 <label for="id" class="col-2 col-form-label">ID</label>
                 <div class="col-10">
                   <input type="number" name="id" id="id" class="form-control-plaintext" readonly
-                    [(ngModel)]="item.id"
+                    [(ngModel)]="item.id" #id="ngModel"
                     placeholder="1"
                   >
                 </div>
@@ -41,7 +41,7 @@
                   <textarea name="description" id="description" class="form-control-plaintext" readonly
                     [(ngModel)]="item.description" #description="ngModel"
                     placeholder="desc"
-                    ></textarea>
+                  ></textarea>
                 </div>
               </div>
               <div class="text-center">

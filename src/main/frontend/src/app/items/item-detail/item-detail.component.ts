@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { ItemsService } from 'src/app/services/items.service';
+import { ItemsService } from 'src/app/items/shared/items.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { Item } from '../../models/item.model';
+import { Item } from '../shared/item.model';
 
 @Component({
   selector: 'app-item-detail',
