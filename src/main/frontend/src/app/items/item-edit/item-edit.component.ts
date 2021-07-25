@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { filter, mergeMap } from 'rxjs/operators';
-import { DialogService } from 'src/app/core/services/dialog.service';
-import { ItemsService } from 'src/app/items/shared/items.service';
-import { ToastService } from 'src/app/core/services/toast.service';
+import { DialogService } from '../../core/services/dialog.service';
+import { ItemsService } from '../shared/items.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Item } from '../shared/item.model';
 
 @Component({

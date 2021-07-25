@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { ItemsService } from 'src/app/items/shared/items.service';
-import { ToastService } from 'src/app/core/services/toast.service';
+import { ItemsService } from '../shared/items.service';
+import { ToastService } from '../../core/services/toast.service';
 import { Item } from '../shared/item.model';
 
 @Component({
