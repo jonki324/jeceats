@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { DialogService } from '../../../services/dialog.service';
+import { DialogService } from '../../services/dialog.service';
 import { UsersService } from '../../../users/shared/users.service';
 
 @Component({

@@ -5,6 +5,7 @@ import { HeaderComponent } from './layout/header/header.component';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { CoreRoutingModule } from './core-routing.module';
 import { SpinnerComponent } from './layout/spinner/spinner.component';
+import { DialogComponent } from './layout/dialog/dialog.component';
 
 
 
@@ -12,7 +13,8 @@ import { SpinnerComponent } from './layout/spinner/spinner.component';
   declarations: [
     FooterComponent,
     HeaderComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    DialogComponent
   ],
   imports: [
     CommonModule,

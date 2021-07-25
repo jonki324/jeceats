@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { Observable } from 'rxjs';
-import { DialogComponent } from '../layout/dialog.component';
+import { DialogComponent } from '../layout/dialog/dialog.component';
 
 @Injectable({
   providedIn: 'root'

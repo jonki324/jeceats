@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Item } from '../shared/item.model';
 import { ItemsService } from 'src/app/items/shared/items.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { DialogService } from 'src/app/services/dialog.service';
+import { DialogService } from 'src/app/core/services/dialog.service';
 import { filter, mergeMap } from 'rxjs/operators';
 
 @Component({
