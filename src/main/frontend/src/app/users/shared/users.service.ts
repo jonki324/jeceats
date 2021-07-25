@@ -3,8 +3,8 @@ import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { Login } from './login.model';
 import { User } from './user.model';
-import { ApiService } from '../../services/api.service';
-import { JwtService } from '../../services/jwt.service';
+import { ApiService } from '../../core/services/api.service';
+import { JwtService } from '../../core/services/jwt.service';
 
 @Injectable({
   providedIn: 'root'
