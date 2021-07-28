@@ -1,5 +1,29 @@
 version: '3'
 services:
+  ap:
+    build:
+      context: .
+      args:
+        DEFAULT_PROJECT_NAME: ${DEFAULT_PROJECT_NAME:-jeceats}
+        DEFAULT_HTTP_PORT: ${DEFAULT_HTTP_PORT:-9080}
+        DEFAULT_HTTPS_PORT: ${DEFAULT_HTTPS_PORT:-9443}
+    container_name: ap
+    environment:
+      DEFAULT_HTTP_PORT: ${DEFAULT_HTTP_PORT:-9080}
+      DEFAULT_HTTPS_PORT: ${DEFAULT_HTTPS_PORT:-9443}
+      DEFAULT_DB_HOST: ${DEFAULT_DB_HOST:-db}
+      DEFAULT_DB_PORT: ${DEFAULT_DB_PORT:-5432}
+      DEFAULT_DB_NAME: ${DEFAULT_DB_NAME:-jeceatsdb}
+      DEFAULT_DB_USER: ${DEFAULT_DB_USER:-dbuser}
+      DEFAULT_DB_PASSWORD: ${DEFAULT_DB_PASSWORD:-dbpass}
+      DEFAULT_KEYSTORE_SECRET: ${DEFAULT_KEYSTORE_SECRET:-secret}
+      DEFAULT_JWT_ISS: ${DEFAULT_JWT_ISS:-http://localhost:9080}
+      TZ: Asia/Tokyo
+    ports:
+      - "${LOCAL_HTTP_PORT:-9080}:${DEFAULT_HTTP_PORT:-9080}"
+      - "${LOCAL_HTTPS_PORT:-9443}:${DEFAULT_HTTPS_PORT:-9443}"
+    depends_on:
+      - db
   db:
     image: postgres:13.3
     container_name: db
@@ -11,7 +35,7 @@ services:
       PGTZ: Asia/Tokyo
       TZ: Asia/Tokyo
     ports:
-      - "5432:5432"
+      - "${LOCAL_DB_PORT:-5432}:${DEFAULT_DB_PORT:-5432}"
     volumes:
       - database:/var/lib/postgresql/data
 volumes:

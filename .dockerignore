@@ -1,0 +1,12 @@
+src/main/frontend/bin
+src/main/frontend/lib
+src/main/frontend/node
+src/main/frontend/node_modules
+target
+createDDL.jdbc
+.settings
+.classpath
+.env
+.env.example
+.project
+**.md
