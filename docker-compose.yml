@@ -19,12 +19,17 @@ services:
       DEFAULT_KEYSTORE_SECRET: ${DEFAULT_KEYSTORE_SECRET:-secret}
       DEFAULT_JWT_ISS: ${DEFAULT_JWT_ISS:-http://localhost:9080}
       MP_JWT_VERIFY_ISSUER: ${MP_JWT_VERIFY_ISSUER:-http://localhost:9080}
+      DEFAULT_STORAGE_ENDPOINT: ${DEFAULT_STORAGE_ENDPOINT:-http://os:9000}
+      DEFAULT_STORAGE_REGION: ${DEFAULT_STORAGE_REGION:-ap-northeast-1}
+      DEFAULT_STORAGE_ACCESS_KEY: ${DEFAULT_STORAGE_ACCESS_KEY:-accesskey}
+      DEFAULT_STORAGE_SECRET_KEY: ${DEFAULT_STORAGE_SECRET_KEY:-secretkey}
       TZ: Asia/Tokyo
     ports:
       - "${LOCAL_HTTP_PORT:-9080}:${DEFAULT_HTTP_PORT:-9080}"
       - "${LOCAL_HTTPS_PORT:-9443}:${DEFAULT_HTTPS_PORT:-9443}"
     depends_on:
       - db
+      - os
   db:
     image: postgres:13.3
     container_name: db
@@ -41,6 +46,22 @@ services:
       - database:/var/lib/postgresql/data
       - ./createDDL.jdbc:/docker-entrypoint-initdb.d/createDDL.sql
       - ./insert_master.sql:/docker-entrypoint-initdb.d/insert_master.sql
+  os:
+    image: minio/minio:latest
+    container_name: os
+    environment:
+      MINIO_ROOT_USER: ${DEFAULT_STORAGE_ACCESS_KEY:-accesskey}
+      MINIO_ROOT_PASSWORD: ${DEFAULT_STORAGE_SECRET_KEY:-secretkey}
+      MINIO_API_CORS_ALLOW_ORIGIN: ${LOCAL_STORAGE_API_CORS_ALLOW_ORIGIN:-http://localhost:9080}
+      TZ: Asia/Tokyo
+    ports:
+      - "${LOCAL_STORAGE_API_PORT:-9000}:${LOCAL_STORAGE_API_PORT:-9000}"
+      - "${LOCAL_STORAGE_CONSOLE_PORT:-9001}:${LOCAL_STORAGE_CONSOLE_PORT:-9001}"
+    volumes:
+      - storage:/data
+    command: server /data --console-address ":9001"
 volumes:
   database:
+    driver: local
+  storage:
     driver: local
