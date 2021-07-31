@@ -93,7 +93,8 @@ class ItemEndpointIT {
 
     @Test
     void testAdd() throws Exception {
-        Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4");
+        Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName",
+                "objnm4");
         RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(201);
 
         ITable actualTbl = databaseTester.getConnection().createTable(TEST_DB_TABLE);
@@ -108,21 +109,25 @@ class ItemEndpointIT {
 
     @Test
     void testAddInvalid() {
-        Map<String, Object> json = Map.of("name", "", "price", "400", "description", "desc4");
+        Map<String, Object> json = Map.of("name", "", "price", "400", "description", "desc4", "objectName", "objnm4");
         RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
 
-        json = Map.of("name", "name4", "price", "-1", "description", "desc4");
+        json = Map.of("name", "name4", "price", "-1", "description", "desc4", "objectName", "objnm4");
         RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
-        json = Map.of("name", "name4", "price", "10000", "description", "desc4");
+        json = Map.of("name", "name4", "price", "10000", "description", "desc4", "objectName", "objnm4");
         RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
 
-        json = Map.of("name", "name4", "price", "400", "description", "");
+        json = Map.of("name", "name4", "price", "400", "description", "", "objectName", "objnm4");
+        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+
+        json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName", "");
         RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
     }
 
     @Test
     void testEdit() throws Exception {
-        Map<String, Object> json = Map.of("name", "name22", "price", "222", "description", "desc22", "version", "1");
+        Map<String, Object> json = Map.of("name", "name22", "price", "222", "description", "desc22", "objectName",
+                "objnm22", "version", "1");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().put("/{id}").then()
                 .statusCode(204);
 
@@ -144,21 +149,24 @@ class ItemEndpointIT {
 
     @Test
     void testEditBadRequest() {
-        Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "version", "1");
+        Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName",
+                "objnm4", "version", "1");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 4).body(json).when().put("/{id}").then()
                 .statusCode(400);
     }
 
     @Test
     void testEditConflict() {
-        Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "version", "2");
+        Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName",
+                "objnm4", "version", "2");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().put("/{id}").then()
                 .statusCode(409);
     }
 
     @Test
     void testRemove() throws Exception {
-        Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "version", "1");
+        Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "objectName",
+                "objnm4", "version", "1");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().delete("/{id}").then()
                 .statusCode(204);
 
@@ -174,14 +182,16 @@ class ItemEndpointIT {
 
     @Test
     void testRemoveBadRequest() {
-        Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "version", "1");
+        Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "objectName",
+                "objnm2", "version", "1");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 4).body(json).when().delete("/{id}").then()
                 .statusCode(400);
     }
 
     @Test
     void testRemoveConflict() {
-        Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "version", "2");
+        Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "objectName",
+                "objnm2", "version", "2");
         RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().delete("/{id}").then()
                 .statusCode(409);
     }

@@ -131,6 +131,7 @@ class ItemServiceTest {
         item1.setName("name1");
         item1.setPrice(new BigDecimal("100"));
         item1.setDescription("desc1");
+        item1.setObjectName("objnm1");
         item1.setCreatedAt(LocalDateTime.now());
         item1.setUpdatedAt(LocalDateTime.now());
         item1.setVersion(1);
@@ -139,6 +140,7 @@ class ItemServiceTest {
         item2.setName("name2");
         item2.setPrice(new BigDecimal("200"));
         item2.setDescription("desc2");
+        item2.setObjectName("objnm2");
         item2.setCreatedAt(LocalDateTime.now());
         item2.setUpdatedAt(LocalDateTime.now());
         item2.setVersion(1);
@@ -152,6 +154,7 @@ class ItemServiceTest {
         item.setName("name1");
         item.setPrice(new BigDecimal("100"));
         item.setDescription("desc1");
+        item.setObjectName("objnm1");
         item.setCreatedAt(LocalDateTime.now());
         item.setUpdatedAt(LocalDateTime.now());
         item.setVersion(1);
@@ -165,6 +168,7 @@ class ItemServiceTest {
         item.setName("name1");
         item.setPrice(new BigDecimal("100"));
         item.setDescription("desc1");
+        item.setObjectName("objnm1");
         item.setVersion(1);
         return item;
     }

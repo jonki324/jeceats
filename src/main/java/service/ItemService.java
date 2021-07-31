@@ -45,6 +45,7 @@ public class ItemService extends BaseService {
         target.setName(itemDTO.getName());
         target.setPrice(itemDTO.getPrice());
         target.setDescription(itemDTO.getDescription());
+        target.setObjectName(itemDTO.getObjectName());
         target.setVersion(itemDTO.getVersion());
         Item entity = itemDAO.update(target);
         itemDAO.detach(entity);
@@ -64,6 +65,7 @@ public class ItemService extends BaseService {
         itemDTO.setName(entity.getName());
         itemDTO.setPrice(entity.getPrice());
         itemDTO.setDescription(entity.getDescription());
+        itemDTO.setObjectName(entity.getObjectName());
         itemDTO.setVersion(entity.getVersion());
         itemDAO.detach(entity);
         return itemDTO;
@@ -74,6 +76,7 @@ public class ItemService extends BaseService {
         entity.setName(itemDTO.getName());
         entity.setPrice(itemDTO.getPrice());
         entity.setDescription(itemDTO.getDescription());
+        entity.setObjectName(itemDTO.getObjectName());
         return entity;
     }
 }

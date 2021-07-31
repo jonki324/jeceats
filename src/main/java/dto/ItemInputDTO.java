@@ -35,5 +35,8 @@ public class ItemInputDTO implements Serializable {
     @NotBlank
     private String description;
 
+    @NotBlank
+    private String objectName;
+
     private Integer version;
 }

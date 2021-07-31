@@ -75,7 +75,7 @@ class ItemDAOTest {
 
     @Test
     void testCreate() throws Exception {
-        Item item = new Item("name4", new BigDecimal("400"), "desc4");
+        Item item = new Item("name4", new BigDecimal("400"), "desc4", "objnm4");
         em.getTransaction().begin();
         sut.create(item);
         em.getTransaction().commit();
@@ -97,6 +97,7 @@ class ItemDAOTest {
         assertEquals("name1", actual.getName());
         assertEquals(new BigDecimal("100"), actual.getPrice());
         assertEquals("desc1", actual.getDescription());
+        assertEquals("objnm1", actual.getObjectName());
     }
 
     @Test
@@ -105,6 +106,7 @@ class ItemDAOTest {
         item.setName("name22");
         item.setPrice(new BigDecimal("222"));
         item.setDescription("desc22");
+        item.setObjectName("objnm22");
         em.getTransaction().begin();
         sut.update(item);
         em.getTransaction().commit();
@@ -146,6 +148,17 @@ class ItemDAOTest {
     void testReadAll() {
         int actual = sut.readAll().size();
         int expected = 3;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testCountByIdAndObjectName() {
+        Long actual = sut.countByIdAndObjectName(1, "objnm1");
+        Long expected = 1L;
+        assertEquals(expected, actual);
+
+        actual = sut.countByIdAndObjectName(1, "objnm2");
+        expected = 0L;
         assertEquals(expected, actual);
     }
 }

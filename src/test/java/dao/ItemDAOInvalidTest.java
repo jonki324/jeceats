@@ -75,7 +75,7 @@ class ItemDAOInvalidTest {
     @Test
     void testInvalidCreate() {
         AppException e = assertThrows(AppException.class, () -> {
-            Item item = new Item("name4", new BigDecimal("400"), "desc4");
+            Item item = new Item("name4", new BigDecimal("400"), "desc4", "objnm4");
             item.setId(1);
             try {
                 em.getTransaction().begin();

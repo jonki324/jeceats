@@ -33,4 +33,7 @@ public class Item extends BaseEntity implements Serializable {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "object_name", unique = true)
+    private String objectName;
 }
