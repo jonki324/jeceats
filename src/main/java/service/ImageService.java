@@ -13,8 +13,8 @@ public class ImageService extends BaseService {
     @Inject
     private ObjectStorageDAO objectStorageDAO;
 
-    public ImageOutputDTO getPresignedObjectUrlForGet(String objectName) {
-        String url = objectStorageDAO.getPresignedObjectUrlMethodGet(objectName);
+    public ImageOutputDTO getPresignedObjectUrlForGet(Integer id, String objectName) {
+        String url = objectStorageDAO.getPresignedObjectUrlMethodGet(id, objectName);
         return new ImageOutputDTO(url, objectName);
     }
 

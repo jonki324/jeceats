@@ -5,7 +5,7 @@ public interface ObjectStorageDAO {
 
     public abstract void makeBucket(String bucketName);
 
-    public abstract String getPresignedObjectUrlMethodGet(String objectName);
+    public abstract String getPresignedObjectUrlMethodGet(Integer id, String objectName);
 
     public abstract String getPresignedObjectUrlMethodPut(String objectName);
 

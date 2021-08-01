@@ -90,7 +90,11 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     }
 
     @Override
-    public String getPresignedObjectUrlMethodGet(String objectName) {
+    public String getPresignedObjectUrlMethodGet(Integer id, String objectName) {
+        Long count = itemDAO.countByIdAndObjectName(id, objectName);
+        if (count != 1) {
+            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, new IllegalArgumentException());
+        }
         String url = "";
         try {
             url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName)

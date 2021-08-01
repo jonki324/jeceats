@@ -28,9 +28,9 @@ public class ImageResource extends BaseResource {
     }
 
     @GET
-    @Path("{objectName}")
-    public Response get(@PathParam("objectName") String objectName) {
-        ImageOutputDTO output = imageService.getPresignedObjectUrlForGet(objectName);
+    @Path("{id}/{objectName}")
+    public Response get(@PathParam("id") Integer id, @PathParam("objectName") String objectName) {
+        ImageOutputDTO output = imageService.getPresignedObjectUrlForGet(id, objectName);
         return Response.status(Status.OK).entity(output).build();
     }
 

@@ -61,14 +61,14 @@ class ObjectStrorageDAOTest {
 
     @Test
     void testGetPresigneObjectUrlMethodGet() {
-        String actual = sut.getPresignedObjectUrlMethodGet("test");
+        String actual = sut.getPresignedObjectUrlMethodGet(1, "objnm1");
         assertNotEquals("", actual);
     }
 
     @Test
     void testGetPresigneObjectUrlMethodGetInvalid() {
         AppException actual = Assertions.assertThrows(AppException.class, () -> {
-            sut.getPresignedObjectUrlMethodGet(null);
+            sut.getPresignedObjectUrlMethodGet(10, "objnm10");
         });
         String expected = ResourceBundle.getBundle("messages").getString(ErrorType.SIGNED_URL_GET_ERROR.toString());
         assertEquals(expected, actual.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
@@ -76,7 +76,7 @@ class ObjectStrorageDAOTest {
 
     @Test
     void testGetPresigneObjectUrlMethodPut() {
-        String actual = sut.getPresignedObjectUrlMethodPut("test");
+        String actual = sut.getPresignedObjectUrlMethodPut("objnm99");
         assertNotEquals("", actual);
     }
 
