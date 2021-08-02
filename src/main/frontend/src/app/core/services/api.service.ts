@@ -22,7 +22,11 @@ export class ApiService {
   }
 
   put(path: string, body: Object = {}): Observable<any> {
-    return this.http.put(`${environment.apiUrl}${path}`, body)
+    let url = `${environment.apiUrl}${path}`
+    if (path.startsWith('http')) {
+      url = path
+    }
+    return this.http.put(url, body)
       .pipe(catchError(this.handleError))
   }
 
