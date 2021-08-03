@@ -54,7 +54,7 @@ services:
     environment:
       MINIO_ROOT_USER: ${DEFAULT_STORAGE_ACCESS_KEY:-accesskey}
       MINIO_ROOT_PASSWORD: ${DEFAULT_STORAGE_SECRET_KEY:-secretkey}
-      MINIO_API_CORS_ALLOW_ORIGIN: ${LOCAL_STORAGE_API_CORS_ALLOW_ORIGIN:-http://localhost:9080}
+      MINIO_API_CORS_ALLOW_ORIGIN: ${LOCAL_STORAGE_API_CORS_ALLOW_ORIGIN:-http://localhost:4200,http://localhost:9080}
       TZ: Asia/Tokyo
     ports:
       - "${LOCAL_STORAGE_API_PORT:-9000}:${LOCAL_STORAGE_API_PORT:-9000}"
