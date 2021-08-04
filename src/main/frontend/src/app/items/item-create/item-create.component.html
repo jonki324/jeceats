@@ -41,6 +41,16 @@
                   <app-error-list [errors]="errors" [model]="description"></app-error-list>
                 </div>
               </div>
+              <div class="row mb-3">
+                <label for="file" class="col-2 col-form-label">Image File</label>
+                <div class="col-10">
+                  <input type="file" name="file" id="file" class="form-control" required
+                    [(ngModel)]="item.file" #file="ngModel"
+                    appInvalidStyle [errors]="errors"
+                    (change)="readFile($event)"
+                  >
+                </div>
+              </div>
               <div class="text-center">
                 <button type="button" class="btn btn-light me-2" (click)="goBack()">Back</button>
                 <button type="button" class="btn btn-primary" [disabled]="form.invalid" (click)="onSubmit(form)">Create</button>

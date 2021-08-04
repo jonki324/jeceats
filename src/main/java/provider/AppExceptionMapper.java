@@ -47,6 +47,7 @@ public class AppExceptionMapper implements ExceptionMapper<Throwable> {
             rb.type(headers.getMediaType());
             res = rb.build();
         }
+        exception.printStackTrace();
         return res;
     }
 }

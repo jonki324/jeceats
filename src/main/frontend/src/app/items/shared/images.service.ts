@@ -29,7 +29,7 @@ export class ImagesService {
     return this.apiService.get(signedUrl.presignedObjectUrl)
   }
 
-  put(signedUrl: PresignedObjectUrl, file: any): Observable<any> {
+  put(signedUrl: PresignedObjectUrl, file: FormData): Observable<any> {
     return this.apiService.put(signedUrl.presignedObjectUrl, file)
   }
 }

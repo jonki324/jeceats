@@ -2,6 +2,7 @@ package dao;
 
 import java.util.ResourceBundle;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -48,7 +49,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     private ItemDAO itemDAO;
 
     public ObjectStorageDAOImpl() {
-        createClient();
+//        createClient();
     }
 
     public ObjectStorageDAOImpl(String endpoint, String region, String accessKey, String secretKey, String bucketName,
@@ -62,6 +63,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
         createClient();
     }
 
+    @PostConstruct
     private void createClient() {
         client = MinioClient.builder().endpoint(endpoint).region(region).credentials(accessKey, secretKey).build();
         if (!bucketExists(bucketName)) {
@@ -93,7 +95,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     public String getPresignedObjectUrlMethodGet(Integer id, String objectName) {
         Long count = itemDAO.countByIdAndObjectName(id, objectName);
         if (count != 1) {
-            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, new IllegalArgumentException());
+//            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, new IllegalArgumentException());
         }
         String url = "";
         try {

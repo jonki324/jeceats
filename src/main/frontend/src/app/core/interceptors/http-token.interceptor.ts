@@ -21,15 +21,19 @@ export class HttpTokenInterceptor implements HttpInterceptor {
     private toastService: ToastService
   ) { }
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const headersConfig: any = {
-      'Content-Type': 'application/json'
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    let req = request
+    if (!req.url.startsWith('http://localhost:9000')) {
+      const headersConfig: any = {
+        'Content-Type': 'application/json'
+      }
+      const token = this.jwtService.getToken()
+      if (token) {
+        headersConfig['Authorization'] = `Bearer ${token}`
+      }
+      req = request.clone({ setHeaders: headersConfig })
     }
-    const token = this.jwtService.getToken()
-    if (token) {
-      headersConfig['Authorization'] = `Bearer ${token}`
-    }
-    const req = request.clone({ setHeaders: headersConfig })
+
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {

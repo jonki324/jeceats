@@ -3,5 +3,8 @@ export interface Item {
   name: string
   price: number
   description: string
+  objectName: string
+  file: any
+  files: any
   version: number
 }

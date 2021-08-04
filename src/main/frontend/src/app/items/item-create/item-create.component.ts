@@ -17,6 +17,8 @@ export class ItemCreateComponent implements OnInit {
 
   errors: any = {}
 
+  // reader: FileReader = new FileReader()
+
   constructor(
     private itemsService: ItemsService,
     private location: Location,
@@ -51,5 +53,16 @@ export class ItemCreateComponent implements OnInit {
         form.form.markAsUntouched()
       }
     )
+  }
+
+  readFile(event: any): void {
+    const files = event.target.files
+    this.item.files = files[0]
+    // if (files.length) {
+    //   this.reader.onload = (e) => {
+    //     this.item.file = this.reader.result
+    //   }
+    //   this.reader.readAsDataURL(files[0])
+    // }
   }
 }
