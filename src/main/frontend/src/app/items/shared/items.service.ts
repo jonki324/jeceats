@@ -32,7 +32,7 @@ export class ItemsService {
         (signedUrl => {
           item.objectName = signedUrl.objectName
           const file = new FormData()
-          file.append('file', item.files, signedUrl.objectName)
+          file.append('file', item.file, signedUrl.objectName)
           return this.imagesService.put(signedUrl, file)
         })
       ),

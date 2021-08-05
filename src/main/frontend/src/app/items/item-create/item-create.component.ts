@@ -17,8 +17,6 @@ export class ItemCreateComponent implements OnInit {
 
   errors: any = {}
 
-  // reader: FileReader = new FileReader()
-
   constructor(
     private itemsService: ItemsService,
     private location: Location,
@@ -45,6 +43,7 @@ export class ItemCreateComponent implements OnInit {
         this.goBack()
       },
       errors => {
+        console.error(errors)
         this.errors = errors.errors ?? {}
         this.errors.system?.forEach((err: string) => {
           this.toastService.danger(err)
@@ -57,12 +56,8 @@ export class ItemCreateComponent implements OnInit {
 
   readFile(event: any): void {
     const files = event.target.files
-    this.item.files = files[0]
-    // if (files.length) {
-    //   this.reader.onload = (e) => {
-    //     this.item.file = this.reader.result
-    //   }
-    //   this.reader.readAsDataURL(files[0])
-    // }
+    if (files.lenght) {
+      this.item.file = files[0]
+    }
   }
 }

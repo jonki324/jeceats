@@ -5,6 +5,5 @@ export interface Item {
   description: string
   objectName: string
   file: any
-  files: any
   version: number
 }
