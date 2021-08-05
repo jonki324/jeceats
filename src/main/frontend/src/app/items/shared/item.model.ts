@@ -4,6 +4,6 @@ export interface Item {
   price: number
   description: string
   objectName: string
-  file: any
+  file: File
   version: number
 }

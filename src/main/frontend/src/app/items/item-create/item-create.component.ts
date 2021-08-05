@@ -15,6 +15,9 @@ import { Item } from '../shared/item.model';
 export class ItemCreateComponent implements OnInit {
   item: Item = {} as Item
 
+  addInvalidClass: boolean = false
+  isInValidFile: boolean = true
+
   errors: any = {}
 
   constructor(
@@ -56,8 +59,13 @@ export class ItemCreateComponent implements OnInit {
 
   readFile(event: any): void {
     const files = event.target.files
-    if (files.lenght) {
+    if (files.length) {
       this.item.file = files[0]
+      this.addInvalidClass = false
+      this.isInValidFile = false
+    } else {
+      this.addInvalidClass = true
+      this.isInValidFile = true
     }
   }
 }
