@@ -29,5 +29,7 @@ public class ItemDTO implements Serializable {
 
     private String objectName;
 
+    private String imageSrc;
+
     private Integer version;
 }

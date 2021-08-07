@@ -31,9 +31,7 @@ export class ItemsService {
       mergeMap(
         (signedUrl => {
           item.objectName = signedUrl.objectName
-          const file = new FormData()
-          file.append('file', item.file, signedUrl.objectName)
-          return this.imagesService.put(signedUrl, file)
+          return this.imagesService.put(signedUrl, item.file)
         })
       ),
       mergeMap(() => this.apiService.post(this.apiUrl, item))

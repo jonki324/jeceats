@@ -44,6 +44,12 @@
                   ></textarea>
                 </div>
               </div>
+              <div class="row mb-3">
+                <label for="image" class="col-2 col-form-label">Image</label>
+                <div class="col-10">
+                  <img id="image" src="{{ item.imageSrc }}" alt="image">
+                </div>
+              </div>
               <div class="text-center">
                 <button type="button" class="btn btn-light me-2" (click)="goBack()">Back</button>
               </div>

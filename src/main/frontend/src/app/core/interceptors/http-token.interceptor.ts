@@ -23,7 +23,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let req = request
-    if (!(req.method.toLowerCase() === 'put' && req.serializeBody() instanceof FormData)) {
+    if (!(req.method.toLowerCase() === 'put' && req.serializeBody() instanceof File)) {
       const headersConfig: any = {
         'Content-Type': 'application/json'
       }

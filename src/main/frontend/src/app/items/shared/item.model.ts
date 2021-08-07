@@ -5,5 +5,6 @@ export interface Item {
   description: string
   objectName: string
   file: File
+  imageSrc: string
   version: number
 }

@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import common.Constants.ErrorType;
 import dao.ItemDAO;
+import dao.ObjectStorageDAO;
 import dto.ItemDTO;
 import dto.ItemInputDTO;
 import dto.ItemListOutputDTO;
@@ -20,15 +21,26 @@ public class ItemService extends BaseService {
     @Inject
     private ItemDAO itemDAO;
 
+    @Inject
+    private ObjectStorageDAO objectStorageDAO;
+
     public ItemListOutputDTO getAll() {
-        List<ItemDTO> ItemDTOList = itemDAO.readAll().stream().sequential().map(e -> convert(e))
-                .collect(Collectors.toList());
+        List<ItemDTO> ItemDTOList = itemDAO.readAll().stream().sequential().map(e -> {
+            String url = getImageUrl(e);
+            var dto = convert(e);
+            dto.setImageSrc(url);
+            return dto;
+        }).collect(Collectors.toList());
         return new ItemListOutputDTO(ItemDTOList);
     }
 
     public ItemOutputDTO get(Integer id) {
-        ItemDTO itemDTO = itemDAO.read(id).map(e -> convert(e))
-                .orElseThrow(() -> createAppException(ErrorType.NOT_EXIST));
+        ItemDTO itemDTO = itemDAO.read(id).map(e -> {
+            String url = getImageUrl(e);
+            var dto = convert(e);
+            dto.setImageSrc(url);
+            return dto;
+        }).orElseThrow(() -> createAppException(ErrorType.NOT_EXIST));
         return new ItemOutputDTO(itemDTO);
     }
 
@@ -78,5 +90,9 @@ public class ItemService extends BaseService {
         entity.setDescription(itemDTO.getDescription());
         entity.setObjectName(itemDTO.getObjectName());
         return entity;
+    }
+
+    private String getImageUrl(Item entity) {
+        return objectStorageDAO.getPresignedObjectUrlMethodGet(entity.getId(), entity.getObjectName());
     }
 }

@@ -44,7 +44,7 @@
               <div class="row mb-3">
                 <label for="file" class="col-2 col-form-label">Image File</label>
                 <div class="col-10">
-                  <input type="file" name="file" id="file" class="form-control" required
+                  <input type="file" name="file" id="file" class="form-control" accept="image/*" required
                     (change)="readFile($event)"
                     [ngClass]="{ 'is-invalid': addInvalidClass }"
                   >
@@ -64,4 +64,3 @@
     </div>
   </div>
 </div>
-<pre>{{ item | json }}</pre>

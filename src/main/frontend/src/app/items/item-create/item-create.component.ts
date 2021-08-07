@@ -46,7 +46,6 @@ export class ItemCreateComponent implements OnInit {
         this.goBack()
       },
       errors => {
-        console.error(errors)
         this.errors = errors.errors ?? {}
         this.errors.system?.forEach((err: string) => {
           this.toastService.danger(err)
@@ -58,8 +57,8 @@ export class ItemCreateComponent implements OnInit {
   }
 
   readFile(event: any): void {
-    const files = event.target.files
-    if (files.length) {
+    const files: File[] = event.target.files
+    if (files.length > 0) {
       this.item.file = files[0]
       this.addInvalidClass = false
       this.isInValidFile = false
