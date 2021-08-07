@@ -18,6 +18,9 @@ export class ItemCreateComponent implements OnInit {
   addInvalidClass: boolean = false
   isInValidFile: boolean = true
 
+  reader = new FileReader()
+  preview: any = null
+
   errors: any = {}
 
   constructor(
@@ -28,6 +31,7 @@ export class ItemCreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.reader.onload = e => this.preview = this.reader.result
   }
 
   goBack(): void {
@@ -62,9 +66,12 @@ export class ItemCreateComponent implements OnInit {
       this.item.file = files[0]
       this.addInvalidClass = false
       this.isInValidFile = false
+      this.reader.readAsDataURL(files[0])
     } else {
+      this.item.file = {} as File
       this.addInvalidClass = true
       this.isInValidFile = true
+      this.preview = null
     }
   }
 }
