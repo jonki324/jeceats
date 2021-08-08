@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { delay, map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { Item } from './item.model';
 import { ApiService } from '../../core/services/api.service';
 import { ImagesService } from './images.service';
-import { PresignedObjectUrl } from './presigned-object-url.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +28,10 @@ export class ItemsService {
   add(item: Item): Observable<any> {
     return this.imagesService.getPresignedObjectUrlForCreatePut().pipe(
       mergeMap(
-        (signedUrl => {
+        signedUrl => {
           item.objectName = signedUrl.objectName
           return this.imagesService.put(signedUrl, item.file)
-        })
+        }
       ),
       mergeMap(() => this.apiService.post(this.apiUrl, item))
     )
@@ -40,7 +39,18 @@ export class ItemsService {
 
   update(item: Item): Observable<any> {
     const url = `${this.apiUrl}/${item.id}`
-    return this.apiService.put(url, item)
+    if (item.file) {
+      return this.imagesService.getPresignedObjectUrlForUpdatePut(item.id, item.objectName).pipe(
+        mergeMap(
+          signedUrl => {
+            return this.imagesService.put(signedUrl, item.file)
+          }
+        ),
+        mergeMap(() => this.apiService.put(url, item))
+      )
+    } else {
+      return this.apiService.put(url, item)
+    }
   }
 
   delete(item: Item): Observable<any> {

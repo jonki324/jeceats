@@ -16,6 +16,9 @@ import { Item } from '../shared/item.model';
 export class ItemEditComponent implements OnInit {
   item: Item = {} as Item
 
+  reader = new FileReader()
+  preview: any = null
+
   errors: any = {}
 
   constructor(
@@ -32,6 +35,7 @@ export class ItemEditComponent implements OnInit {
       const id = Number(params.get('id'))
       this.get(id)
     })
+    this.reader.onload = e => this.preview = this.reader.result
   }
 
   goBack(): void {
@@ -71,5 +75,16 @@ export class ItemEditComponent implements OnInit {
         form.form.markAsUntouched()
       }
     )
+  }
+
+  readFile(event: any): void {
+    const files: File[] = event.target.files
+    if (files.length > 0) {
+      this.item.file = files[0]
+      this.reader.readAsDataURL(files[0])
+    } else {
+      this.item.file = {} as File
+      this.preview = null
+    }
   }
 }
