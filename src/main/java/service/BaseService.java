@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import common.AppException;
 import common.Constants;
 import common.Constants.ErrorType;
-import common.ErrorInfo;
+import exception.ErrorInfo;
 
 public abstract class BaseService {
     protected AppException createAppException(ErrorType errorType) {

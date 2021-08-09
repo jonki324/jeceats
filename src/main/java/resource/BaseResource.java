@@ -12,7 +12,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 import common.AppException;
 import common.Constants.ErrorType;
-import common.ErrorInfo;
+import exception.ErrorInfo;
 
 public abstract class BaseResource {
     @Context

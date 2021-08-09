@@ -1,6 +1,7 @@
 package common;
 
 import common.Constants.ErrorType;
+import exception.ErrorInfo;
 
 public class AppException extends RuntimeException {
     private static final long serialVersionUID = 1L;
