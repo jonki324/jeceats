@@ -10,4 +10,6 @@ public interface ObjectStorageDAO {
     public abstract String getPresignedObjectUrlMethodPut(String objectName);
 
     public abstract String getPresignedObjectUrlMethodPut(Integer id, String objectName);
+
+    public abstract void removeObject(String objectName);
 }

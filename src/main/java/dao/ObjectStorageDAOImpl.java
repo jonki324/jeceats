@@ -15,6 +15,7 @@ import io.minio.BucketExistsArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
+import io.minio.RemoveObjectArgs;
 import io.minio.http.Method;
 
 @Dependent
@@ -125,6 +126,15 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
             throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, new IllegalArgumentException());
         }
         return getPresignedObjectUrlMethodPut(objectName);
+    }
+
+    @Override
+    public void removeObject(String objectName) {
+        try {
+            client.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
+        } catch (Exception e) {
+            throw createAppException(ErrorType.BUCKET_CONNECT_ERROR, e);
+        }
     }
 
     protected AppException createAppException(ErrorType errorType, Throwable cause) {

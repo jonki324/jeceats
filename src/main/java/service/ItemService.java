@@ -69,6 +69,7 @@ public class ItemService extends BaseService {
         entity.setId(itemDTO.getId());
         entity.setVersion(itemDTO.getVersion());
         itemDAO.delete(entity);
+        objectStorageDAO.removeObject(itemDTO.getObjectName());
     }
 
     private ItemDTO convert(Item entity) {
