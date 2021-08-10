@@ -4,24 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
-import common.AppException;
-import common.Constants;
-import common.Constants.ErrorType;
+import config.MessageConfig;
 import entity.BaseEntity;
+import exception.DBException;
+import exception.DBException.ErrorType;
 
 public abstract class BaseDAOImpl<T extends BaseEntity> {
     private Class<T> tClass;
 
     @PersistenceContext
     private EntityManager em;
+
+    @Inject
+    protected MessageConfig msgConfig;
 
     public BaseDAOImpl(Class<T> tClass) {
         this.tClass = tClass;
@@ -41,9 +44,9 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
             getEntityManager().persist(entity);
             flush();
         } catch (EntityExistsException e) {
-            throw createAppException(ErrorType.ENTITY_EXISTS, e);
+            throw createDBException(ErrorType.ENTITY_EXISTS, e);
         } catch (PersistenceException e) {
-            throw createAppException(ErrorType.PERSISTENCE, e);
+            throw createDBException(ErrorType.PERSISTENCE, e);
         }
     }
 
@@ -57,9 +60,9 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
             updatedEntity = getEntityManager().merge(entity);
             flush();
         } catch (OptimisticLockException e) {
-            throw createAppException(ErrorType.OPTIMISTIC_LOCK, e);
+            throw createDBException(ErrorType.OPTIMISTIC_LOCK, e);
         } catch (PersistenceException e) {
-            throw createAppException(ErrorType.PERSISTENCE, e);
+            throw createDBException(ErrorType.PERSISTENCE, e);
         }
         return updatedEntity;
     }
@@ -72,12 +75,12 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
                 getEntityManager().remove(target);
                 flush();
             } catch (OptimisticLockException e) {
-                throw createAppException(ErrorType.OPTIMISTIC_LOCK, e);
+                throw createDBException(ErrorType.OPTIMISTIC_LOCK, e);
             } catch (PersistenceException e) {
-                throw createAppException(ErrorType.PERSISTENCE, e);
+                throw createDBException(ErrorType.PERSISTENCE, e);
             }
         }, () -> {
-            throw createAppException(ErrorType.NOT_EXIST, null);
+            throw createDBException(ErrorType.NOT_EXIST, new IllegalArgumentException());
         });
     }
 
@@ -87,7 +90,7 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
         try {
             resultList = getEntityManager().createQuery(jpql, tClass).getResultList();
         } catch (PersistenceException e) {
-            throw createAppException(ErrorType.PERSISTENCE, e);
+            throw createDBException(ErrorType.PERSISTENCE, e);
         }
         return Objects.isNull(resultList) ? new ArrayList<T>() : resultList;
     }
@@ -100,9 +103,26 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
         getEntityManager().flush();
     }
 
-    protected AppException createAppException(ErrorType errorType, Throwable cause) {
-        String msg = ResourceBundle.getBundle("messages").getString(errorType.toString());
-        return Objects.isNull(cause) ? new AppException(errorType, Constants.DEFAULT_FIELD_NAME, msg)
-                : new AppException(errorType, Constants.DEFAULT_FIELD_NAME, msg, cause);
+    protected DBException createDBException(ErrorType errorType, Throwable cause) {
+        String msg;
+        switch (errorType) {
+            case OPTIMISTIC_LOCK:
+                msg = msgConfig.OPTIMISTIC_LOCK;
+                break;
+            case ENTITY_EXISTS:
+                msg = msgConfig.ENTITY_EXISTS;
+                break;
+            case PERSISTENCE:
+                msg = msgConfig.PERSISTENCE;
+                break;
+            case NOT_EXIST:
+                msg = msgConfig.NOT_EXIST;
+                break;
+            case OTHER:
+            default:
+                msg = msgConfig.OPTIMISTIC_LOCK;
+                break;
+        }
+        return new DBException(DBException.DEFAULT_FIELD_NAME, msg, cause, errorType);
     }
 }

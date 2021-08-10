@@ -7,8 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
-import common.Constants.ErrorType;
 import entity.User;
+import exception.DBException.ErrorType;
 
 @Dependent
 public class UserDAOImpl extends BaseDAOImpl<User> implements UserDAO {
@@ -31,7 +31,7 @@ public class UserDAOImpl extends BaseDAOImpl<User> implements UserDAO {
         } catch (NoResultException | NonUniqueResultException e) {
             user = Optional.empty();
         } catch (Exception e) {
-            throw createAppException(ErrorType.PERSISTENCE, e);
+            throw createDBException(ErrorType.PERSISTENCE, e);
         }
         return user;
     }

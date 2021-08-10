@@ -2,7 +2,7 @@ package dto;
 
 import java.io.Serializable;
 
-import common.Constants.Role;
+import entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

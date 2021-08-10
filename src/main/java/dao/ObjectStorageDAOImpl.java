@@ -1,16 +1,14 @@
 package dao;
 
-import java.util.ResourceBundle;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import common.AppException;
-import common.Constants;
-import common.Constants.ErrorType;
+import config.MessageConfig;
+import exception.StorageException;
+import exception.StorageException.ErrorType;
 import io.minio.BucketExistsArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
@@ -49,6 +47,9 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     @Inject
     private ItemDAO itemDAO;
 
+    @Inject
+    private MessageConfig msgConfig;
+
     public ObjectStorageDAOImpl() {
     }
 
@@ -77,7 +78,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
         try {
             found = client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
-            throw createAppException(ErrorType.BUCKET_CONNECT_ERROR, e);
+            throw createStorageException(ErrorType.BUCKET_CONNECT, e);
         }
         return found;
     }
@@ -87,7 +88,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
         try {
             client.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
-            throw createAppException(ErrorType.BUCKET_CONNECT_ERROR, e);
+            throw createStorageException(ErrorType.BUCKET_CONNECT, e);
         }
     }
 
@@ -95,14 +96,14 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     public String getPresignedObjectUrlMethodGet(Integer id, String objectName) {
         Long count = itemDAO.countByIdAndObjectName(id, objectName);
         if (count != 1) {
-            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, new IllegalArgumentException());
+            throw createStorageException(ErrorType.GET_SIGNED_URL, new IllegalArgumentException());
         }
         String url = "";
         try {
             url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName)
                     .object(objectName).expiry(Integer.parseInt(expiry)).build());
         } catch (Exception e) {
-            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, e);
+            throw createStorageException(ErrorType.GET_SIGNED_URL, e);
         }
         return url;
     }
@@ -114,7 +115,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
             url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.PUT).bucket(bucketName)
                     .object(objectName).expiry(Integer.parseInt(expiry)).build());
         } catch (Exception e) {
-            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, e);
+            throw createStorageException(ErrorType.GET_SIGNED_URL, e);
         }
         return url;
     }
@@ -123,7 +124,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     public String getPresignedObjectUrlMethodPut(Integer id, String objectName) {
         Long count = itemDAO.countByIdAndObjectName(id, objectName);
         if (count != 1) {
-            throw createAppException(ErrorType.SIGNED_URL_GET_ERROR, new IllegalArgumentException());
+            throw createStorageException(ErrorType.GET_SIGNED_URL, new IllegalArgumentException());
         }
         return getPresignedObjectUrlMethodPut(objectName);
     }
@@ -133,12 +134,27 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
         try {
             client.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
-            throw createAppException(ErrorType.BUCKET_CONNECT_ERROR, e);
+            throw createStorageException(ErrorType.REMOVE_OBJECT, e);
         }
     }
 
-    protected AppException createAppException(ErrorType errorType, Throwable cause) {
-        String msg = ResourceBundle.getBundle("messages").getString(errorType.toString());
-        return new AppException(errorType, Constants.DEFAULT_FIELD_NAME, msg, cause);
+    protected StorageException createStorageException(ErrorType errorType, Throwable cause) {
+        String msg;
+        switch (errorType) {
+            case BUCKET_CONNECT:
+                msg = msgConfig.BUCKET_CONNECT;
+                break;
+            case GET_SIGNED_URL:
+                msg = msgConfig.GET_SIGNED_URL;
+                break;
+            case REMOVE_OBJECT:
+                msg = msgConfig.REMOVE_OBJECT;
+                break;
+            case OTHER:
+            default:
+                msg = msgConfig.OTHER;
+                break;
+        }
+        return new StorageException(StorageException.DEFAULT_FIELD_NAME, msg, cause, errorType);
     }
 }

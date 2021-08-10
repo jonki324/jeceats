@@ -2,7 +2,7 @@ package auth;
 
 import com.ibm.websphere.security.jwt.JwtBuilder;
 
-import common.Constants.Role;
+import entity.Role;
 
 public class JwtGenerator {
     public String getToken(Integer id, String loginId, Role role) throws Exception {

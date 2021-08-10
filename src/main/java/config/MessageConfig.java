@@ -15,9 +15,13 @@ public class MessageConfig {
 
     public String NOT_EXIST;
 
-    public String LOGIN_ERROR;
+    public String INVALID_LOGIN;
 
-    public String BUCKET_CONNECT_ERROR;
+    public String BUCKET_CONNECT;
 
-    public String SIGNED_URL_GET_ERROR;
+    public String GET_SIGNED_URL;
+
+    public String REMOVE_OBJECT;
+
+    public String OTHER;
 }
