@@ -18,7 +18,7 @@ import service.UserService;
 @Path("users")
 public class UserResource extends BaseResource {
     @Inject
-    UserService UserService;
+    protected UserService UserService;
 
     @POST
     @Path("login")

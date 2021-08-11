@@ -2,6 +2,7 @@ package resource;
 
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -10,9 +11,9 @@ import javax.validation.ValidatorFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
-import common.AppException;
-import common.Constants.ErrorType;
+import config.MessageConfig;
 import exception.ErrorInfo;
+import exception.ValidationException;
 
 public abstract class BaseResource {
     @Context
@@ -20,6 +21,9 @@ public abstract class BaseResource {
 
     @Context
     private HttpHeaders headers;
+
+    @Inject
+    protected MessageConfig msgConfig;
 
     public HttpServletRequest getRequest() {
         return request;
@@ -38,11 +42,11 @@ public abstract class BaseResource {
             result.forEach(e -> {
                 errInfo.addError(e.getPropertyPath().toString(), e.getMessage());
             });
-            throw creatAppException(ErrorType.VALIDATION_ERROR, errInfo);
+            throw creatValidationException(errInfo);
         }
     }
 
-    protected AppException creatAppException(ErrorType errorType, ErrorInfo errInfo) {
-        return new AppException(errorType, errInfo);
+    protected ValidationException creatValidationException(ErrorInfo errInfo) {
+        return new ValidationException(errInfo);
     }
 }

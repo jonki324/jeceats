@@ -4,9 +4,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import config.MessageConfig;
+import config.StorageConfig;
 import exception.StorageException;
 import exception.StorageException.ErrorType;
 import io.minio.BucketExistsArgs;
@@ -18,57 +17,35 @@ import io.minio.http.Method;
 
 @Dependent
 public class ObjectStorageDAOImpl implements ObjectStorageDAO {
-    @Inject
-    @ConfigProperty(name = "default.storage.endpoint")
-    private String endpoint;
+    protected MinioClient client;
 
     @Inject
-    @ConfigProperty(name = "default.storage.region")
-    private String region;
+    protected StorageConfig config;
 
     @Inject
-    @ConfigProperty(name = "default.storage.access.key")
-    private String accessKey;
+    protected ItemDAO itemDAO;
 
     @Inject
-    @ConfigProperty(name = "default.storage.secret.key")
-    private String secretKey;
-
-    @Inject
-    @ConfigProperty(name = "default.storage.bucket.name")
-    private String bucketName;
-
-    @Inject
-    @ConfigProperty(name = "default.storage.expiry.sec")
-    private String expiry;
-
-    private MinioClient client;
-
-    @Inject
-    private ItemDAO itemDAO;
-
-    @Inject
-    private MessageConfig msgConfig;
+    protected MessageConfig msgConfig;
 
     public ObjectStorageDAOImpl() {
+        super();
     }
 
     public ObjectStorageDAOImpl(String endpoint, String region, String accessKey, String secretKey, String bucketName,
             String expiry) {
-        this.endpoint = endpoint;
-        this.region = region;
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
-        this.bucketName = bucketName;
-        this.expiry = expiry;
-        createClient();
+        client = MinioClient.builder().endpoint(endpoint).region(region).credentials(accessKey, secretKey).build();
+        if (!bucketExists(bucketName)) {
+            makeBucket(bucketName);
+        }
     }
 
     @PostConstruct
     private void createClient() {
-        client = MinioClient.builder().endpoint(endpoint).region(region).credentials(accessKey, secretKey).build();
-        if (!bucketExists(bucketName)) {
-            makeBucket(bucketName);
+        client = MinioClient.builder().endpoint(config.ENDPOINT).region(config.REGION)
+                .credentials(config.ACCESS_KEY, config.SECRET_KEY).build();
+        if (!bucketExists(config.BUCKET_NAME)) {
+            makeBucket(config.BUCKET_NAME);
         }
     }
 
@@ -100,8 +77,8 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
         }
         String url = "";
         try {
-            url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName)
-                    .object(objectName).expiry(Integer.parseInt(expiry)).build());
+            url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET)
+                    .bucket(config.BUCKET_NAME).object(objectName).expiry(config.EXPIRY_SEC).build());
         } catch (Exception e) {
             throw createStorageException(ErrorType.GET_SIGNED_URL, e);
         }
@@ -112,8 +89,8 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     public String getPresignedObjectUrlMethodPut(String objectName) {
         String url = "";
         try {
-            url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.PUT).bucket(bucketName)
-                    .object(objectName).expiry(Integer.parseInt(expiry)).build());
+            url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.PUT)
+                    .bucket(config.BUCKET_NAME).object(objectName).expiry(config.EXPIRY_SEC).build());
         } catch (Exception e) {
             throw createStorageException(ErrorType.GET_SIGNED_URL, e);
         }
@@ -132,7 +109,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     @Override
     public void removeObject(String objectName) {
         try {
-            client.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
+            client.removeObject(RemoveObjectArgs.builder().bucket(config.BUCKET_NAME).object(objectName).build());
         } catch (Exception e) {
             throw createStorageException(ErrorType.REMOVE_OBJECT, e);
         }

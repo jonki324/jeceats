@@ -6,7 +6,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import auth.JwtGenerator;
-import common.Constants.ErrorType;
 import dao.UserDAO;
 import dto.LoginInputDTO;
 import dto.LoginOutputDTO;
@@ -15,10 +14,11 @@ import entity.User;
 
 @RequestScoped
 public class UserService extends BaseService {
-    private JwtGenerator jwtGenerator = new JwtGenerator();
+    @Inject
+    protected JwtGenerator jwtGenerator;
 
     @Inject
-    private UserDAO userDAO;
+    protected UserDAO userDAO;
 
     public LoginOutputDTO login(LoginInputDTO inputDTO) {
         LoginOutputDTO outputDTO = new LoginOutputDTO();
@@ -28,7 +28,7 @@ public class UserService extends BaseService {
             try {
                 jwt = jwtGenerator.getToken(u.getId(), u.getLoginId(), u.getRole());
             } catch (Exception e) {
-                throw createAppException(ErrorType.LOGIN_ERROR, e);
+                throw createAppException(msgConfig.INVALID_LOGIN, e);
             }
             outputDTO.setToken(jwt);
             UserDTO userDTO = new UserDTO();
@@ -38,7 +38,7 @@ public class UserService extends BaseService {
             userDTO.setRole(u.getRole());
             outputDTO.setUser(userDTO);
         }, () -> {
-            throw createAppException(ErrorType.LOGIN_ERROR);
+            throw createAppException(msgConfig.INVALID_LOGIN);
         });
         return outputDTO;
     }

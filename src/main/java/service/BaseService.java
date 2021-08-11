@@ -1,24 +1,24 @@
 package service;
 
-import java.util.ResourceBundle;
+import javax.inject.Inject;
 
-import common.AppException;
-import common.Constants;
-import common.Constants.ErrorType;
+import config.MessageConfig;
+import exception.AppException;
 import exception.ErrorInfo;
 
 public abstract class BaseService {
-    protected AppException createAppException(ErrorType errorType) {
-        String msg = ResourceBundle.getBundle("messages").getString(errorType.toString());
-        return new AppException(errorType, Constants.DEFAULT_FIELD_NAME, msg);
+    @Inject
+    protected MessageConfig msgConfig;
+
+    protected AppException createAppException(String msg) {
+        return new AppException(AppException.DEFAULT_FIELD_NAME, msg);
     }
 
-    protected AppException createAppException(ErrorType errorType, Throwable cause) {
-        String msg = ResourceBundle.getBundle("messages").getString(errorType.toString());
-        return new AppException(errorType, Constants.DEFAULT_FIELD_NAME, msg, cause);
+    protected AppException createAppException(String msg, Throwable cause) {
+        return new AppException(AppException.DEFAULT_FIELD_NAME, msg, cause);
     }
 
-    protected AppException createAppException(ErrorType errorType, ErrorInfo errInfo) {
-        return new AppException(errorType, errInfo);
+    protected AppException createAppException(ErrorInfo errInfo) {
+        return new AppException(errInfo);
     }
 }

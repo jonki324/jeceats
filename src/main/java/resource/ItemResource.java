@@ -24,7 +24,7 @@ import service.ItemService;
 @Path("items")
 public class ItemResource extends BaseResource {
     @Inject
-    ItemService ItemService;
+    protected ItemService ItemService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

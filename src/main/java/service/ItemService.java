@@ -7,7 +7,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import common.Constants.ErrorType;
 import dao.ItemDAO;
 import dao.ObjectStorageDAO;
 import dto.ItemDTO;
@@ -19,10 +18,10 @@ import entity.Item;
 @RequestScoped
 public class ItemService extends BaseService {
     @Inject
-    private ItemDAO itemDAO;
+    protected ItemDAO itemDAO;
 
     @Inject
-    private ObjectStorageDAO objectStorageDAO;
+    protected ObjectStorageDAO objectStorageDAO;
 
     public ItemListOutputDTO getAll() {
         List<ItemDTO> ItemDTOList = itemDAO.readAll().stream().sequential().map(e -> {
@@ -40,7 +39,7 @@ public class ItemService extends BaseService {
             var dto = convert(e);
             dto.setImageSrc(url);
             return dto;
-        }).orElseThrow(() -> createAppException(ErrorType.NOT_EXIST));
+        }).orElseThrow(() -> createAppException(msgConfig.NOT_EXIST));
         return new ItemOutputDTO(itemDTO);
     }
 
@@ -53,7 +52,7 @@ public class ItemService extends BaseService {
 
     @Transactional
     public void edit(ItemInputDTO itemDTO) {
-        Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createAppException(ErrorType.NOT_EXIST));
+        Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createAppException(msgConfig.NOT_EXIST));
         target.setName(itemDTO.getName());
         target.setPrice(itemDTO.getPrice());
         target.setDescription(itemDTO.getDescription());

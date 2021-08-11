@@ -11,7 +11,7 @@ import dto.ImageOutputDTO;
 @RequestScoped
 public class ImageService extends BaseService {
     @Inject
-    private ObjectStorageDAO objectStorageDAO;
+    protected ObjectStorageDAO objectStorageDAO;
 
     public ImageOutputDTO getPresignedObjectUrlForGet(Integer id, String objectName) {
         String url = objectStorageDAO.getPresignedObjectUrlMethodGet(id, objectName);

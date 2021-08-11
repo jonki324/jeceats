@@ -18,7 +18,7 @@ import service.ImageService;
 @Path("images")
 public class ImageResource extends BaseResource {
     @Inject
-    ImageService imageService;
+    protected ImageService imageService;
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
