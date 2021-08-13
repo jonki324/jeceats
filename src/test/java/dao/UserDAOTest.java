@@ -20,7 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import common.Constants.Role;
+import entity.Role;
 import entity.User;
 
 class UserDAOTest {
