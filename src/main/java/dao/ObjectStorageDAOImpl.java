@@ -23,21 +23,16 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     protected StorageConfig config;
 
     @Inject
-    protected ItemDAO itemDAO;
-
-    @Inject
     protected MessageConfig msgConfig;
 
     public ObjectStorageDAOImpl() {
         super();
     }
 
-    public ObjectStorageDAOImpl(String endpoint, String region, String accessKey, String secretKey, String bucketName,
-            String expiry) {
-        client = MinioClient.builder().endpoint(endpoint).region(region).credentials(accessKey, secretKey).build();
-        if (!bucketExists(bucketName)) {
-            makeBucket(bucketName);
-        }
+    public ObjectStorageDAOImpl(StorageConfig config, MessageConfig msgConfig) {
+        this.msgConfig = msgConfig;
+        this.config = config;
+        createClient();
     }
 
     @PostConstruct
@@ -70,11 +65,7 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
     }
 
     @Override
-    public String getPresignedObjectUrlMethodGet(Integer id, String objectName) {
-        Long count = itemDAO.countByIdAndObjectName(id, objectName);
-        if (count != 1) {
-            throw createStorageException(ErrorType.GET_SIGNED_URL, new IllegalArgumentException());
-        }
+    public String getPresignedObjectUrlMethodGet(String objectName) {
         String url = "";
         try {
             url = client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET)
@@ -95,15 +86,6 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
             throw createStorageException(ErrorType.GET_SIGNED_URL, e);
         }
         return url;
-    }
-
-    @Override
-    public String getPresignedObjectUrlMethodPut(Integer id, String objectName) {
-        Long count = itemDAO.countByIdAndObjectName(id, objectName);
-        if (count != 1) {
-            throw createStorageException(ErrorType.GET_SIGNED_URL, new IllegalArgumentException());
-        }
-        return getPresignedObjectUrlMethodPut(objectName);
     }
 
     @Override

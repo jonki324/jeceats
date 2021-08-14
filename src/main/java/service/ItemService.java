@@ -93,6 +93,10 @@ public class ItemService extends BaseService {
     }
 
     private String getImageUrl(Item entity) {
-        return objectStorageDAO.getPresignedObjectUrlMethodGet(entity.getId(), entity.getObjectName());
+        Long count = itemDAO.countByIdAndObjectName(entity.getId(), entity.getObjectName());
+        if (count != 1) {
+            throw createAppException(msgConfig.GET_SIGNED_URL);
+        }
+        return objectStorageDAO.getPresignedObjectUrlMethodGet(entity.getObjectName());
     }
 }

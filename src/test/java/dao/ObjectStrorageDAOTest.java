@@ -5,42 +5,47 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ResourceBundle;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import common.AppException;
-import common.Constants;
-import common.Constants.ErrorType;
+import config.MessageConfig;
+import config.StorageConfig;
+import exception.StorageException;
+import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
 import io.minio.RemoveBucketArgs;
+import io.minio.Result;
+import io.minio.UploadObjectArgs;
 import io.minio.errors.ErrorResponseException;
+import io.minio.errors.XmlParserException;
+import io.minio.messages.Item;
+import util.ConfigUtil;
 
 class ObjectStrorageDAOTest {
-    private static final String ENDPOINT = "http://localhost:9000";
-    private static final String REGION = "ap-northeast-1";
-    private static final String ACCESS_KEY = "accesskey";
-    private static final String SECRET_KEY = "secretkey";
-    private static final String BUCKET_NAME = "jeceats";
-    private static final String EXPIRY_SEC = "60";
+    private static final String DATA_PATH = "src/test/data/dao/ObjectStorageDAOTest/objnm1";
+    private static StorageConfig STORAGE_CONFIG;
+    private static MessageConfig MESSAGE_CONFIG;
+    private static MinioClient client;
     private ObjectStorageDAO sut;
 
     @BeforeAll
     static void beforeAll() throws Exception {
+        var configUtil = new ConfigUtil();
+        STORAGE_CONFIG = configUtil.getStorageConfig();
+        MESSAGE_CONFIG = configUtil.getMessageConfig();
         removeBucket();
     }
 
     @BeforeEach
     void beforeEach() {
-        sut = new ObjectStorageDAOImpl(ENDPOINT, REGION, ACCESS_KEY, SECRET_KEY, BUCKET_NAME, EXPIRY_SEC);
+        sut = new ObjectStorageDAOImpl(STORAGE_CONFIG, MESSAGE_CONFIG);
     }
 
     @Test
     void testBucketExists() {
-        boolean actual = sut.bucketExists(BUCKET_NAME);
+        boolean actual = sut.bucketExists(STORAGE_CONFIG.BUCKET_NAME);
         assertTrue(actual);
     }
 
@@ -52,26 +57,26 @@ class ObjectStrorageDAOTest {
 
     @Test
     void testBucketExistsInvalid() {
-        AppException actual = Assertions.assertThrows(AppException.class, () -> {
+        StorageException actual = Assertions.assertThrows(StorageException.class, () -> {
             sut.bucketExists(null);
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.BUCKET_CONNECT_ERROR.toString());
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        String expected = MESSAGE_CONFIG.BUCKET_CONNECT;
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
     void testGetPresigneObjectUrlMethodGet() {
-        String actual = sut.getPresignedObjectUrlMethodGet(1, "objnm1");
+        String actual = sut.getPresignedObjectUrlMethodGet("objnm1");
         assertNotEquals("", actual);
     }
 
     @Test
     void testGetPresigneObjectUrlMethodGetInvalid() {
-        AppException actual = Assertions.assertThrows(AppException.class, () -> {
-            sut.getPresignedObjectUrlMethodGet(10, "objnm10");
+        StorageException actual = Assertions.assertThrows(StorageException.class, () -> {
+            sut.getPresignedObjectUrlMethodGet(null);
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.SIGNED_URL_GET_ERROR.toString());
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        String expected = MESSAGE_CONFIG.GET_SIGNED_URL;
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -82,22 +87,59 @@ class ObjectStrorageDAOTest {
 
     @Test
     void testGetPresigneObjectUrlMethodPutInvalid() {
-        AppException actual = Assertions.assertThrows(AppException.class, () -> {
+        StorageException actual = Assertions.assertThrows(StorageException.class, () -> {
             sut.getPresignedObjectUrlMethodPut(null);
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.SIGNED_URL_GET_ERROR.toString());
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        String expected = MESSAGE_CONFIG.GET_SIGNED_URL;
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
+    }
+
+    @Test
+    void testRemoveObject() throws XmlParserException, Exception {
+        uploadObject();
+        Iterable<Result<Item>> list = client
+                .listObjects(ListObjectsArgs.builder().bucket(STORAGE_CONFIG.BUCKET_NAME).build());
+        var itr = list.iterator();
+        while (itr.hasNext()) {
+            Result<io.minio.messages.Item> result = (Result<io.minio.messages.Item>) itr.next();
+            String actual = result.get().objectName();
+            String expected = "objnm1";
+            assertEquals(expected, actual);
+        }
+        sut.removeObject("objnm1");
+        Iterable<Result<Item>> list2 = client
+                .listObjects(ListObjectsArgs.builder().bucket(STORAGE_CONFIG.BUCKET_NAME).build());
+        var itr2 = list2.iterator();
+        assertFalse(itr2.hasNext());
+    }
+
+    @Test
+    void testRemoveObjectInvalid() {
+        StorageException actual = Assertions.assertThrows(StorageException.class, () -> {
+            sut.removeObject(null);
+        });
+        String expected = MESSAGE_CONFIG.REMOVE_OBJECT;
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
     }
 
     private static void removeBucket() throws Exception {
-        MinioClient client = MinioClient.builder().endpoint(ENDPOINT).region(REGION).credentials(ACCESS_KEY, SECRET_KEY)
-                .build();
+        client = MinioClient.builder().endpoint(STORAGE_CONFIG.ENDPOINT).region(STORAGE_CONFIG.REGION)
+                .credentials(STORAGE_CONFIG.ACCESS_KEY, STORAGE_CONFIG.SECRET_KEY).build();
         try {
-            client.removeBucket(RemoveBucketArgs.builder().bucket(BUCKET_NAME).build());
+            client.removeBucket(RemoveBucketArgs.builder().bucket(STORAGE_CONFIG.BUCKET_NAME).build());
         } catch (ErrorResponseException e) {
             if (!e.errorResponse().code().equals("NoSuchBucket")) {
                 throw e;
             }
+        }
+    }
+
+    private void uploadObject() throws Exception {
+        try {
+            client.uploadObject(UploadObjectArgs.builder().bucket(STORAGE_CONFIG.BUCKET_NAME).object("objnm1")
+                    .filename(DATA_PATH).build());
+        } catch (ErrorResponseException e) {
+            throw e;
         }
     }
 }
