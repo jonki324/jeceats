@@ -8,7 +8,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -24,13 +23,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import common.AppException;
-import common.Constants;
-import common.Constants.ErrorType;
+import config.MessageConfig;
 import entity.Item;
+import exception.DBException;
+import util.ConfigUtil;
 
 class ItemDAOInvalidTest {
     private static EntityManager em;
+    private static MessageConfig msgConfig;
     private static String DRIVER;
     private static String URL;
     private static String USER;
@@ -49,6 +49,7 @@ class ItemDAOInvalidTest {
         URL = (String) prop.get(PROP_NAME_JDBC + "url");
         USER = (String) prop.get(PROP_NAME_JDBC + "user");
         PASSWORD = (String) prop.get(PROP_NAME_JDBC + "password");
+        msgConfig = new ConfigUtil().getMessageConfig();
     }
 
     @BeforeEach
@@ -58,7 +59,7 @@ class ItemDAOInvalidTest {
         databaseTester.setDataSet(dataSet);
         databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
         databaseTester.onSetup();
-        sut = new ItemDAOImpl(em);
+        sut = new ItemDAOImpl(em, msgConfig);
     }
 
     @AfterEach
@@ -74,7 +75,7 @@ class ItemDAOInvalidTest {
 
     @Test
     void testInvalidCreate() {
-        AppException e = assertThrows(AppException.class, () -> {
+        DBException e = assertThrows(DBException.class, () -> {
             Item item = new Item("name4", new BigDecimal("400"), "desc4", "objnm4");
             item.setId(1);
             try {
@@ -84,9 +85,9 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.ENTITY_EXISTS.toString());
+        String expected = msgConfig.ENTITY_EXISTS;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -97,7 +98,7 @@ class ItemDAOInvalidTest {
 
     @Test
     void testInvalidUpdate() {
-        AppException e1 = assertThrows(AppException.class, () -> {
+        DBException e1 = assertThrows(DBException.class, () -> {
             Item item = sut.read(2).get();
             item.setId(4);
             item.setName("name22");
@@ -108,11 +109,11 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.PERSISTENCE.toString());
+        String expected = msgConfig.PERSISTENCE;
         assertTrue(e1.getErrorInfo().hasError());
-        assertEquals(expected, e1.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e1.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
 
-        AppException e2 = assertThrows(AppException.class, () -> {
+        DBException e2 = assertThrows(DBException.class, () -> {
             Item item = sut.read(2).get();
             item.setName("name22");
             item.setVersion(2);
@@ -123,14 +124,14 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
+        expected = msgConfig.OPTIMISTIC_LOCK;
         assertTrue(e2.getErrorInfo().hasError());
-        assertEquals(expected, e2.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e2.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
     void testInvalidDelete() {
-        AppException e1 = assertThrows(AppException.class, () -> {
+        DBException e1 = assertThrows(DBException.class, () -> {
             Item item = sut.read(2).get();
             item.setId(4);
             try {
@@ -140,11 +141,11 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.NOT_EXIST.toString());
+        String expected = msgConfig.NOT_EXIST;
         assertTrue(e1.getErrorInfo().hasError());
-        assertEquals(expected, e1.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e1.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
 
-        AppException e2 = assertThrows(AppException.class, () -> {
+        DBException e2 = assertThrows(DBException.class, () -> {
             Item item = sut.read(2).get();
             item.setVersion(2);
             try {
@@ -154,9 +155,9 @@ class ItemDAOInvalidTest {
                 em.getTransaction().rollback();
             }
         });
-        expected = ResourceBundle.getBundle("messages").getString(ErrorType.OPTIMISTIC_LOCK.toString());
+        expected = msgConfig.OPTIMISTIC_LOCK;
         assertTrue(e2.getErrorInfo().hasError());
-        assertEquals(expected, e2.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e2.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test

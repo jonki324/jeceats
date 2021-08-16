@@ -30,9 +30,10 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
         this.tClass = tClass;
     }
 
-    public BaseDAOImpl(Class<T> tClass, EntityManager em) {
+    public BaseDAOImpl(Class<T> tClass, EntityManager em, MessageConfig msgConfig) {
         this(tClass);
         this.em = em;
+        this.msgConfig = msgConfig;
     }
 
     public EntityManager getEntityManager() {

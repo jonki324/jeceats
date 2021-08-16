@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.verify;
@@ -16,9 +17,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -26,22 +27,35 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoSession;
 
-import common.AppException;
-import common.Constants;
-import common.Constants.ErrorType;
+import config.MessageConfig;
 import dao.ItemDAO;
+import dao.ObjectStorageDAO;
 import dto.ItemDTO;
 import dto.ItemInputDTO;
 import dto.ItemListOutputDTO;
 import dto.ItemOutputDTO;
 import entity.Item;
+import exception.AppException;
+import util.ConfigUtil;
 
 class ItemServiceTest {
+    private static MessageConfig msgConfig;
+
     private MockitoSession session;
+
     @Mock
     private ItemDAO itemDAO;
+
+    @Mock
+    private ObjectStorageDAO objectStorageDAO;
+
     @InjectMocks
-    private ItemService itemService = new ItemService();
+    private ItemService itemService = new ItemService(msgConfig);
+
+    @BeforeAll
+    static void beforeAll() {
+        msgConfig = new ConfigUtil().getMessageConfig();
+    }
 
     @BeforeEach
     void beforeEach() {
@@ -56,6 +70,8 @@ class ItemServiceTest {
     @Test
     void testGetAll() {
         when(itemDAO.readAll()).thenReturn(getMockItemList());
+        when(itemDAO.countByIdAndObjectName(anyInt(), anyString())).thenReturn(1L);
+        when(objectStorageDAO.getPresignedObjectUrlMethodGet(anyString())).thenReturn("objurl");
         ItemListOutputDTO tmp = itemService.getAll();
         int actual = tmp.getItems().size();
         int expected = 2;
@@ -74,6 +90,8 @@ class ItemServiceTest {
     @Test
     void testGet() {
         when(itemDAO.read(anyInt())).thenReturn(Optional.of(getMockItem()));
+        when(itemDAO.countByIdAndObjectName(anyInt(), anyString())).thenReturn(1L);
+        when(objectStorageDAO.getPresignedObjectUrlMethodGet(anyString())).thenReturn("objurl");
         ItemOutputDTO tmp = itemService.get(1);
         ItemDTO actual = tmp.getItem();
         assertNotNull(actual);
@@ -85,9 +103,9 @@ class ItemServiceTest {
         AppException e = assertThrows(AppException.class, () -> {
             itemService.get(1);
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.NOT_EXIST.toString());
+        String expected = msgConfig.NOT_EXIST;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(AppException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -112,16 +130,18 @@ class ItemServiceTest {
         AppException e = assertThrows(AppException.class, () -> {
             itemService.edit(getItemInputDTO());
         });
-        String expected = ResourceBundle.getBundle("messages").getString(ErrorType.NOT_EXIST.toString());
+        String expected = msgConfig.NOT_EXIST;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(Constants.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(AppException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
     void testRemove() {
         doNothing().when(itemDAO).delete(any(Item.class));
+        doNothing().when(objectStorageDAO).removeObject(anyString());
         itemService.remove(getItemInputDTO());
         verify(itemDAO).delete(any(Item.class));
+        verify(objectStorageDAO).removeObject(anyString());
     }
 
     @Disabled

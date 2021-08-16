@@ -7,6 +7,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import config.MessageConfig;
 import dao.ItemDAO;
 import dao.ObjectStorageDAO;
 import dto.ItemDTO;
@@ -22,6 +23,14 @@ public class ItemService extends BaseService {
 
     @Inject
     protected ObjectStorageDAO objectStorageDAO;
+
+    public ItemService() {
+        super();
+    }
+
+    public ItemService(MessageConfig msgConfig) {
+        super(msgConfig);
+    }
 
     public ItemListOutputDTO getAll() {
         List<ItemDTO> ItemDTOList = itemDAO.readAll().stream().sequential().map(e -> {

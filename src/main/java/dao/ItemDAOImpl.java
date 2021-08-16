@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 
+import config.MessageConfig;
 import entity.Item;
 
 @Dependent
@@ -14,8 +15,8 @@ public class ItemDAOImpl extends BaseDAOImpl<Item> implements ItemDAO {
         super(Item.class);
     }
 
-    public ItemDAOImpl(EntityManager em) {
-        super(Item.class, em);
+    public ItemDAOImpl(EntityManager em, MessageConfig msgConfig) {
+        super(Item.class, em, msgConfig);
     }
 
     @Override

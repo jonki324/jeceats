@@ -24,10 +24,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import config.MessageConfig;
 import entity.Item;
+import util.ConfigUtil;
 
 class ItemDAOTest {
     private static EntityManager em;
+    private static MessageConfig msgConfig;
     private static String DRIVER;
     private static String URL;
     private static String USER;
@@ -50,6 +53,7 @@ class ItemDAOTest {
         URL = (String) prop.get(PROP_NAME_JDBC + "url");
         USER = (String) prop.get(PROP_NAME_JDBC + "user");
         PASSWORD = (String) prop.get(PROP_NAME_JDBC + "password");
+        msgConfig = new ConfigUtil().getMessageConfig();
     }
 
     @BeforeEach
@@ -59,7 +63,7 @@ class ItemDAOTest {
         databaseTester.setDataSet(dataSet);
         databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
         databaseTester.onSetup();
-        sut = new ItemDAOImpl(em);
+        sut = new ItemDAOImpl(em, msgConfig);
     }
 
     @AfterEach

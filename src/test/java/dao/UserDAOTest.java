@@ -20,11 +20,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import config.MessageConfig;
 import entity.Role;
 import entity.User;
+import util.ConfigUtil;
 
 class UserDAOTest {
     private static EntityManager em;
+    private static MessageConfig msgConfig;
     private static String DRIVER;
     private static String URL;
     private static String USER;
@@ -43,6 +46,7 @@ class UserDAOTest {
         URL = (String) prop.get(PROP_NAME_JDBC + "url");
         USER = (String) prop.get(PROP_NAME_JDBC + "user");
         PASSWORD = (String) prop.get(PROP_NAME_JDBC + "password");
+        msgConfig = new ConfigUtil().getMessageConfig();
     }
 
     @BeforeEach
@@ -52,7 +56,7 @@ class UserDAOTest {
         databaseTester.setDataSet(dataSet);
         databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
         databaseTester.onSetup();
-        sut = new UserDAOImpl(em);
+        sut = new UserDAOImpl(em, msgConfig);
     }
 
     @AfterEach

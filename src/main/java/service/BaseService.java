@@ -10,6 +10,15 @@ public abstract class BaseService {
     @Inject
     protected MessageConfig msgConfig;
 
+    public BaseService() {
+        super();
+    }
+
+    public BaseService(MessageConfig msgConfig) {
+        super();
+        this.msgConfig = msgConfig;
+    }
+
     protected AppException createAppException(String msg) {
         return new AppException(AppException.DEFAULT_FIELD_NAME, msg);
     }

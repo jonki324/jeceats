@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
+import config.MessageConfig;
 import entity.User;
 import exception.DBException.ErrorType;
 
@@ -17,8 +18,8 @@ public class UserDAOImpl extends BaseDAOImpl<User> implements UserDAO {
         super(User.class);
     }
 
-    public UserDAOImpl(EntityManager em) {
-        super(User.class, em);
+    public UserDAOImpl(EntityManager em, MessageConfig msgConfig) {
+        super(User.class, em, msgConfig);
     }
 
     @Override
