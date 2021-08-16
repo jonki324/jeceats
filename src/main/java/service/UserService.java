@@ -28,7 +28,7 @@ public class UserService extends BaseService {
             try {
                 jwt = jwtGenerator.getToken(u.getId(), u.getLoginId(), u.getRole());
             } catch (Exception e) {
-                throw createAppException(msgConfig.INVALID_LOGIN, e);
+                throw createValidationException(msgConfig.INVALID_LOGIN, e);
             }
             outputDTO.setToken(jwt);
             UserDTO userDTO = new UserDTO();
@@ -38,7 +38,7 @@ public class UserService extends BaseService {
             userDTO.setRole(u.getRole());
             outputDTO.setUser(userDTO);
         }, () -> {
-            throw createAppException(msgConfig.INVALID_LOGIN);
+            throw createValidationException(msgConfig.INVALID_LOGIN);
         });
         return outputDTO;
     }

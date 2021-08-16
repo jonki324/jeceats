@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import config.MessageConfig;
 import exception.AppException;
 import exception.ErrorInfo;
+import exception.ValidationException;
 
 public abstract class BaseService {
     @Inject
@@ -29,5 +30,17 @@ public abstract class BaseService {
 
     protected AppException createAppException(ErrorInfo errInfo) {
         return new AppException(errInfo);
+    }
+
+    protected ValidationException createValidationException(String msg) {
+        return new ValidationException(ValidationException.DEFAULT_FIELD_NAME, msg);
+    }
+
+    protected ValidationException createValidationException(String msg, Throwable cause) {
+        return new ValidationException(ValidationException.DEFAULT_FIELD_NAME, msg, cause);
+    }
+
+    protected ValidationException creatValidationException(ErrorInfo errInfo) {
+        return new ValidationException(errInfo);
     }
 }

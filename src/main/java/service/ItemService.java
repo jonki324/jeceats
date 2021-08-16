@@ -48,7 +48,7 @@ public class ItemService extends BaseService {
             var dto = convert(e);
             dto.setImageSrc(url);
             return dto;
-        }).orElseThrow(() -> createAppException(msgConfig.NOT_EXIST));
+        }).orElseThrow(() -> createValidationException(msgConfig.NOT_EXIST));
         return new ItemOutputDTO(itemDTO);
     }
 
@@ -61,7 +61,7 @@ public class ItemService extends BaseService {
 
     @Transactional
     public void edit(ItemInputDTO itemDTO) {
-        Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createAppException(msgConfig.NOT_EXIST));
+        Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createValidationException(msgConfig.NOT_EXIST));
         target.setName(itemDTO.getName());
         target.setPrice(itemDTO.getPrice());
         target.setDescription(itemDTO.getDescription());

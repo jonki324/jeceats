@@ -3,4 +3,6 @@
     <items id="1" name="name1" price="100" description="desc1" object_name="objnm1" version="1" />
     <items id="2" name="name2" price="200" description="desc2" object_name="objnm2" version="1" />
     <items id="3" name="name3" price="300" description="desc3" object_name="objnm3" version="1" />
+    <users id="1" login_id="staff" password="pass1" name="name1" role="0" version="1" />
+    <users id="2" login_id="admin" password="pass2" name="name2" role="1" version="1" />
 </dataset>

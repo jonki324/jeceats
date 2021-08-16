@@ -22,10 +22,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import dto.LoginOutputDTO;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
 
 class ItemEndpointIT {
     private static EntityManager em;
@@ -41,7 +44,10 @@ class ItemEndpointIT {
     private static final String DATA_AFTER_DELETE = TEST_DATA_DIR + "after_delete.xml";
     private static final String TEST_DB_TABLE = "items";
     private static final String BASE_API_URL = "/api/items";
+    private static final String LOGIN_API_URL = "/api/users/login";
+    private static final String HEAD_AUTH = "Authorization";
     private IDatabaseTester databaseTester;
+    private String TOKEN;
 
     @BeforeAll
     static void beforeAll() throws Exception {
@@ -52,7 +58,7 @@ class ItemEndpointIT {
         USER = (String) prop.get(PROP_NAME_JDBC + "user");
         PASSWORD = (String) prop.get(PROP_NAME_JDBC + "password");
         RestAssured.port = Integer.getInteger("default.http.port");
-        RestAssured.basePath = BASE_API_URL;
+        RestAssured.defaultParser = Parser.JSON;
     }
 
     @BeforeEach
@@ -62,6 +68,9 @@ class ItemEndpointIT {
         databaseTester.setDataSet(dataSet);
         databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
         databaseTester.onSetup();
+        RestAssured.basePath = LOGIN_API_URL;
+        TOKEN = getToken();
+        RestAssured.basePath = BASE_API_URL;
     }
 
     @AfterEach
@@ -77,25 +86,27 @@ class ItemEndpointIT {
 
     @Test
     void testGetAll() {
-        RestAssured.get().then().body("items", hasSize(3));
+        RestAssured.given().header(HEAD_AUTH, TOKEN).get().then().body("items", hasSize(3));
     }
 
     @Test
     void testGet() {
-        RestAssured.given().pathParam("id", 2).when().get("/{id}").then().body("item.name", equalTo("name2"));
+        RestAssured.given().header(HEAD_AUTH, TOKEN).pathParam("id", 2).when().get("/{id}").then().body("item.name",
+                equalTo("name2"));
     }
 
     @Test
     void testGetBadRequest() {
-        RestAssured.given().pathParam("id", 4).when().get("/{id}").then().statusCode(400).body("errors.system",
-                hasSize(1));
+        RestAssured.given().header(HEAD_AUTH, TOKEN).pathParam("id", 4).when().get("/{id}").then().statusCode(400)
+                .body("errors.system", hasSize(1));
     }
 
     @Test
     void testAdd() throws Exception {
         Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName",
                 "objnm4");
-        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(201);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).body(json).when().post().then()
+                .statusCode(201);
 
         ITable actualTbl = databaseTester.getConnection().createTable(TEST_DB_TABLE);
         ITable expectedTbl = new FlatXmlDataSetBuilder().build(new File(DATA_AFTER_CREATE)).getTable(TEST_DB_TABLE);
@@ -110,26 +121,31 @@ class ItemEndpointIT {
     @Test
     void testAddInvalid() {
         Map<String, Object> json = Map.of("name", "", "price", "400", "description", "desc4", "objectName", "objnm4");
-        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).body(json).when().post().then()
+                .statusCode(400);
 
         json = Map.of("name", "name4", "price", "-1", "description", "desc4", "objectName", "objnm4");
-        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).body(json).when().post().then()
+                .statusCode(400);
         json = Map.of("name", "name4", "price", "10000", "description", "desc4", "objectName", "objnm4");
-        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).body(json).when().post().then()
+                .statusCode(400);
 
         json = Map.of("name", "name4", "price", "400", "description", "", "objectName", "objnm4");
-        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).body(json).when().post().then()
+                .statusCode(400);
 
         json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName", "");
-        RestAssured.given().contentType(ContentType.JSON).body(json).when().post().then().statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).body(json).when().post().then()
+                .statusCode(400);
     }
 
     @Test
     void testEdit() throws Exception {
         Map<String, Object> json = Map.of("name", "name22", "price", "222", "description", "desc22", "objectName",
                 "objnm22", "version", "1");
-        RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().put("/{id}").then()
-                .statusCode(204);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).pathParam("id", 2).body(json).when()
+                .put("/{id}").then().statusCode(204);
 
         ITable actualTbl = databaseTester.getConnection().createTable(TEST_DB_TABLE);
         ITable expectedTbl = new FlatXmlDataSetBuilder().build(new File(DATA_AFTER_UPDATE)).getTable(TEST_DB_TABLE);
@@ -151,24 +167,24 @@ class ItemEndpointIT {
     void testEditBadRequest() {
         Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName",
                 "objnm4", "version", "1");
-        RestAssured.given().contentType(ContentType.JSON).pathParam("id", 4).body(json).when().put("/{id}").then()
-                .statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).pathParam("id", 4).body(json).when()
+                .put("/{id}").then().statusCode(400);
     }
 
     @Test
     void testEditConflict() {
         Map<String, Object> json = Map.of("name", "name4", "price", "400", "description", "desc4", "objectName",
                 "objnm4", "version", "2");
-        RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().put("/{id}").then()
-                .statusCode(409);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).pathParam("id", 2).body(json).when()
+                .put("/{id}").then().statusCode(409);
     }
 
     @Test
     void testRemove() throws Exception {
         Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "objectName",
                 "objnm4", "version", "1");
-        RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().delete("/{id}").then()
-                .statusCode(204);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).pathParam("id", 2).body(json).when()
+                .delete("/{id}").then().statusCode(204);
 
         ITable actualTbl = databaseTester.getConnection().createTable(TEST_DB_TABLE);
         ITable expectedTbl = new FlatXmlDataSetBuilder().build(new File(DATA_AFTER_DELETE)).getTable(TEST_DB_TABLE);
@@ -184,15 +200,22 @@ class ItemEndpointIT {
     void testRemoveBadRequest() {
         Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "objectName",
                 "objnm2", "version", "1");
-        RestAssured.given().contentType(ContentType.JSON).pathParam("id", 4).body(json).when().delete("/{id}").then()
-                .statusCode(400);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).pathParam("id", 4).body(json).when()
+                .delete("/{id}").then().statusCode(400);
     }
 
     @Test
     void testRemoveConflict() {
         Map<String, Object> json = Map.of("name", "name2", "price", "200", "description", "desc2", "objectName",
                 "objnm2", "version", "2");
-        RestAssured.given().contentType(ContentType.JSON).pathParam("id", 2).body(json).when().delete("/{id}").then()
-                .statusCode(409);
+        RestAssured.given().header(HEAD_AUTH, TOKEN).contentType(ContentType.JSON).pathParam("id", 2).body(json).when()
+                .delete("/{id}").then().statusCode(409);
+    }
+
+    @Disabled
+    private String getToken() {
+        Map<String, Object> json = Map.of("loginId", "admin", "password", "pass2");
+        var user = RestAssured.given().contentType(ContentType.JSON).body(json).when().post().as(LoginOutputDTO.class);
+        return "Bearer " + user.getToken();
     }
 }

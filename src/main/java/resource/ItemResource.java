@@ -28,6 +28,7 @@ public class ItemResource extends BaseResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "STAFF", "ADMIN" })
     public Response getAll() {
         ItemListOutputDTO output = ItemService.getAll();
         return Response.status(Status.OK).entity(output).build();
@@ -36,7 +37,7 @@ public class ItemResource extends BaseResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("STAFF")
+    @RolesAllowed({ "STAFF", "ADMIN" })
     public Response get(@PathParam("id") Integer id) {
         ItemOutputDTO output = ItemService.get(id);
         return Response.status(Status.OK).entity(output).build();
@@ -45,6 +46,7 @@ public class ItemResource extends BaseResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "ADMIN" })
     public Response add(ItemInputDTO item) {
         validate(item);
         ItemService.add(item);
@@ -55,6 +57,7 @@ public class ItemResource extends BaseResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "ADMIN" })
     public Response edit(ItemInputDTO item, @PathParam("id") Integer id) {
         item.setId(id);
         validate(item);
@@ -66,6 +69,7 @@ public class ItemResource extends BaseResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "ADMIN" })
     public Response remove(ItemInputDTO item, @PathParam("id") Integer id) {
         item.setId(id);
         ItemService.remove(item);

@@ -35,7 +35,7 @@ import dto.ItemInputDTO;
 import dto.ItemListOutputDTO;
 import dto.ItemOutputDTO;
 import entity.Item;
-import exception.AppException;
+import exception.ValidationException;
 import util.ConfigUtil;
 
 class ItemServiceTest {
@@ -100,12 +100,12 @@ class ItemServiceTest {
     @Test
     void testGetNull() {
         when(itemDAO.read(anyInt())).thenReturn(Optional.empty());
-        AppException e = assertThrows(AppException.class, () -> {
+        ValidationException e = assertThrows(ValidationException.class, () -> {
             itemService.get(1);
         });
         String expected = msgConfig.NOT_EXIST;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(AppException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(ValidationException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -127,12 +127,12 @@ class ItemServiceTest {
     @Test
     void testEditGetNull() {
         when(itemDAO.read(anyInt())).thenReturn(Optional.empty());
-        AppException e = assertThrows(AppException.class, () -> {
+        ValidationException e = assertThrows(ValidationException.class, () -> {
             itemService.edit(getItemInputDTO());
         });
         String expected = msgConfig.NOT_EXIST;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(AppException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(ValidationException.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
