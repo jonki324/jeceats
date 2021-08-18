@@ -8,8 +8,14 @@ import java.util.Map;
 public class ErrorInfo {
     private Map<String, List<String>> errors = new HashMap<String, List<String>>();
 
+    public static final String DEFAULT_FIELD_NAME = "system";
+
     public ErrorInfo() {
         super();
+    }
+
+    public ErrorInfo(String errorMessage) {
+        addError(DEFAULT_FIELD_NAME, errorMessage);
     }
 
     public ErrorInfo(String field, String errorMessage) {

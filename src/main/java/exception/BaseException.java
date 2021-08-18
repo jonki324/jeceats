@@ -3,13 +3,21 @@ package exception;
 public class BaseException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public static final String DEFAULT_FIELD_NAME = "system";
-
     private ErrorInfo errInfo;
 
     public BaseException() {
         super();
         errInfo = new ErrorInfo();
+    }
+
+    public BaseException(String msg) {
+        super();
+        errInfo = new ErrorInfo(msg);
+    }
+
+    public BaseException(String msg, Throwable cause) {
+        super(cause);
+        errInfo = new ErrorInfo(msg);
     }
 
     public BaseException(String field, String msg) {

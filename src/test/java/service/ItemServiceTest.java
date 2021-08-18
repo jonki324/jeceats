@@ -35,6 +35,7 @@ import dto.ItemInputDTO;
 import dto.ItemListOutputDTO;
 import dto.ItemOutputDTO;
 import entity.Item;
+import exception.ErrorInfo;
 import exception.ValidationException;
 import util.ConfigUtil;
 
@@ -105,7 +106,7 @@ class ItemServiceTest {
         });
         String expected = msgConfig.NOT_EXIST;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(ValidationException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -132,7 +133,7 @@ class ItemServiceTest {
         });
         String expected = msgConfig.NOT_EXIST;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(ValidationException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test

@@ -14,6 +14,16 @@ public class DBException extends BaseException {
         this.errorType = ErrorType.OTHER;
     }
 
+    public DBException(String msg, ErrorType errorType) {
+        super(msg);
+        this.errorType = errorType;
+    }
+
+    public DBException(String msg, Throwable cause, ErrorType errorType) {
+        super(msg, cause);
+        this.errorType = errorType;
+    }
+
     public DBException(String field, String msg, ErrorType errorType) {
         super(field, msg);
         this.errorType = errorType;

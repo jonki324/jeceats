@@ -14,6 +14,16 @@ public class StorageException extends BaseException {
         this.errorType = ErrorType.OTHER;
     }
 
+    public StorageException(String msg, ErrorType errorType) {
+        super(msg);
+        this.errorType = errorType;
+    }
+
+    public StorageException(String msg, Throwable cause, ErrorType errorType) {
+        super(msg, cause);
+        this.errorType = errorType;
+    }
+
     public StorageException(String field, String msg, ErrorType errorType) {
         super(field, msg);
         this.errorType = errorType;

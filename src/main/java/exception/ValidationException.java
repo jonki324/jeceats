@@ -7,6 +7,14 @@ public class ValidationException extends BaseException {
         super();
     }
 
+    public ValidationException(String msg) {
+        super(msg);
+    }
+
+    public ValidationException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
     public ValidationException(String field, String msg) {
         super(field, msg);
     }

@@ -21,11 +21,11 @@ public abstract class BaseService {
     }
 
     protected AppException createAppException(String msg) {
-        return new AppException(AppException.DEFAULT_FIELD_NAME, msg);
+        return new AppException(msg);
     }
 
     protected AppException createAppException(String msg, Throwable cause) {
-        return new AppException(AppException.DEFAULT_FIELD_NAME, msg, cause);
+        return new AppException(msg, cause);
     }
 
     protected AppException createAppException(ErrorInfo errInfo) {
@@ -33,11 +33,11 @@ public abstract class BaseService {
     }
 
     protected ValidationException createValidationException(String msg) {
-        return new ValidationException(ValidationException.DEFAULT_FIELD_NAME, msg);
+        return new ValidationException(msg);
     }
 
     protected ValidationException createValidationException(String msg, Throwable cause) {
-        return new ValidationException(ValidationException.DEFAULT_FIELD_NAME, msg, cause);
+        return new ValidationException(msg, cause);
     }
 
     protected ValidationException creatValidationException(ErrorInfo errInfo) {

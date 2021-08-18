@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import config.MessageConfig;
 import entity.Item;
 import exception.DBException;
+import exception.ErrorInfo;
 import util.ConfigUtil;
 
 class ItemDAOInvalidTest {
@@ -87,7 +88,7 @@ class ItemDAOInvalidTest {
         });
         String expected = msgConfig.ENTITY_EXISTS;
         assertTrue(e.getErrorInfo().hasError());
-        assertEquals(expected, e.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -111,7 +112,7 @@ class ItemDAOInvalidTest {
         });
         String expected = msgConfig.PERSISTENCE;
         assertTrue(e1.getErrorInfo().hasError());
-        assertEquals(expected, e1.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e1.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
 
         DBException e2 = assertThrows(DBException.class, () -> {
             Item item = sut.read(2).get();
@@ -126,7 +127,7 @@ class ItemDAOInvalidTest {
         });
         expected = msgConfig.OPTIMISTIC_LOCK;
         assertTrue(e2.getErrorInfo().hasError());
-        assertEquals(expected, e2.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e2.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -143,7 +144,7 @@ class ItemDAOInvalidTest {
         });
         String expected = msgConfig.NOT_EXIST;
         assertTrue(e1.getErrorInfo().hasError());
-        assertEquals(expected, e1.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e1.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
 
         DBException e2 = assertThrows(DBException.class, () -> {
             Item item = sut.read(2).get();
@@ -157,7 +158,7 @@ class ItemDAOInvalidTest {
         });
         expected = msgConfig.OPTIMISTIC_LOCK;
         assertTrue(e2.getErrorInfo().hasError());
-        assertEquals(expected, e2.getErrorInfo().getErrors().get(DBException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, e2.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test

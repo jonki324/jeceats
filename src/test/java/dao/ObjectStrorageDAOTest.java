@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import config.MessageConfig;
 import config.StorageConfig;
+import exception.ErrorInfo;
 import exception.StorageException;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
@@ -61,7 +62,7 @@ class ObjectStrorageDAOTest {
             sut.bucketExists(null);
         });
         String expected = MESSAGE_CONFIG.BUCKET_CONNECT;
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -76,7 +77,7 @@ class ObjectStrorageDAOTest {
             sut.getPresignedObjectUrlMethodGet(null);
         });
         String expected = MESSAGE_CONFIG.GET_SIGNED_URL;
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -91,7 +92,7 @@ class ObjectStrorageDAOTest {
             sut.getPresignedObjectUrlMethodPut(null);
         });
         String expected = MESSAGE_CONFIG.GET_SIGNED_URL;
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     @Test
@@ -119,7 +120,7 @@ class ObjectStrorageDAOTest {
             sut.removeObject(null);
         });
         String expected = MESSAGE_CONFIG.REMOVE_OBJECT;
-        assertEquals(expected, actual.getErrorInfo().getErrors().get(StorageException.DEFAULT_FIELD_NAME).get(0));
+        assertEquals(expected, actual.getErrorInfo().getErrors().get(ErrorInfo.DEFAULT_FIELD_NAME).get(0));
     }
 
     private static void removeBucket() throws Exception {

@@ -114,6 +114,6 @@ public class ObjectStorageDAOImpl implements ObjectStorageDAO {
                 msg = msgConfig.OTHER;
                 break;
         }
-        return new StorageException(StorageException.DEFAULT_FIELD_NAME, msg, cause, errorType);
+        return new StorageException(msg, cause, errorType);
     }
 }

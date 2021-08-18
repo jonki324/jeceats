@@ -124,6 +124,6 @@ public abstract class BaseDAOImpl<T extends BaseEntity> {
                 msg = msgConfig.OPTIMISTIC_LOCK;
                 break;
         }
-        return new DBException(DBException.DEFAULT_FIELD_NAME, msg, cause, errorType);
+        return new DBException(msg, cause, errorType);
     }
 }
