@@ -13,9 +13,15 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Data
+@NoArgsConstructor
+@Accessors(chain = true)
+@SuperBuilder
 public abstract class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -1,8 +1,9 @@
-package dto;
+package resource.request;
 
 import java.io.Serializable;
 
-import entity.Role;
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,16 +19,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode
 @ToString
-public class UserDTO implements Serializable {
+public class LoginRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
-
+    @NotBlank
     private String loginId;
 
+    @NotBlank
     private String password;
-
-    private String name;
-
-    private Role role;
 }

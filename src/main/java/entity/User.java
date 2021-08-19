@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "users")
@@ -19,8 +21,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@SuperBuilder
 public class User extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
