@@ -73,7 +73,7 @@ class UserEndpointIT {
     void testLogin() {
         Map<String, Object> json = Map.of("loginId", "admin", "password", "pass2");
         RestAssured.given().contentType(ContentType.JSON).body(json).when().post("/login").then().statusCode(200)
-                .body("user.id", equalTo(2)).body("token", not(blankOrNullString()));
+                .body("user.id", equalTo(2)).body("user.token", not(blankOrNullString()));
     }
 
     @Test

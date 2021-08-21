@@ -10,8 +10,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import dto.LoginInputDTO;
-import dto.LoginOutputDTO;
+import dto.mapper.UserDTOMapper;
+import resource.request.LoginRequest;
+import resource.response.mapper.LoginResponseMapper;
 import service.UserService;
 
 @RequestScoped
@@ -24,9 +25,10 @@ public class UserResource extends BaseResource {
     @Path("login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(LoginInputDTO input) {
+    public Response login(LoginRequest input) {
         validate(input);
-        LoginOutputDTO output = UserService.login(input);
-        return Response.status(Status.OK).entity(output).build();
+        var output = UserService.login(new UserDTOMapper().mapToDTO(input));
+        var response = new LoginResponseMapper().mapToResponse(output);
+        return Response.status(Status.OK).entity(response).build();
     }
 }

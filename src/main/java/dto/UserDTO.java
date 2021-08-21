@@ -30,4 +30,6 @@ public class UserDTO implements Serializable {
     private String name;
 
     private Role role;
+
+    private String token;
 }

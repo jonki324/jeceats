@@ -25,10 +25,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import dto.LoginOutputDTO;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
+import resource.response.LoginResponse;
 
 class ItemEndpointIT {
     private static EntityManager em;
@@ -215,7 +215,7 @@ class ItemEndpointIT {
     @Disabled
     private String getToken() {
         Map<String, Object> json = Map.of("loginId", "admin", "password", "pass2");
-        var user = RestAssured.given().contentType(ContentType.JSON).body(json).when().post().as(LoginOutputDTO.class);
-        return "Bearer " + user.getToken();
+        var res = RestAssured.given().contentType(ContentType.JSON).body(json).when().post().as(LoginResponse.class);
+        return "Bearer " + res.getUser().getToken();
     }
 }
