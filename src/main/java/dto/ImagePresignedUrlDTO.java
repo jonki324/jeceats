@@ -8,14 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Accessors(chain = true)
 @EqualsAndHashCode
 @ToString
-public class ImageOutputDTO implements Serializable {
+public class ImagePresignedUrlDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String presignedObjectUrl;

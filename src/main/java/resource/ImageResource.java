@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import dto.ImageOutputDTO;
+import resource.response.mapper.ImagePresignedUrlResponseMapper;
 import service.ImageService;
 
 @RequestScoped
@@ -23,22 +23,25 @@ public class ImageResource extends BaseResource {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     public Response create() {
-        ImageOutputDTO output = imageService.getPresignedObjectUrlForPut();
-        return Response.status(Status.OK).entity(output).build();
+        var output = imageService.getPresignedObjectUrlForPut();
+        var response = new ImagePresignedUrlResponseMapper().mapToResponse(output);
+        return Response.status(Status.OK).entity(response).build();
     }
 
     @GET
     @Path("{id}/{objectName}")
     public Response get(@PathParam("id") Integer id, @PathParam("objectName") String objectName) {
-        ImageOutputDTO output = imageService.getPresignedObjectUrlForGet(id, objectName);
-        return Response.status(Status.OK).entity(output).build();
+        var output = imageService.getPresignedObjectUrlForGet(id, objectName);
+        var response = new ImagePresignedUrlResponseMapper().mapToResponse(output);
+        return Response.status(Status.OK).entity(response).build();
     }
 
     @PUT
     @Path("{id}/{objectName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") Integer id, @PathParam("objectName") String objectName) {
-        ImageOutputDTO output = imageService.getPresignedObjectUrlForPut(id, objectName);
-        return Response.status(Status.OK).entity(output).build();
+        var output = imageService.getPresignedObjectUrlForPut(id, objectName);
+        var response = new ImagePresignedUrlResponseMapper().mapToResponse(output);
+        return Response.status(Status.OK).entity(response).build();
     }
 }

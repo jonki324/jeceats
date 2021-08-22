@@ -7,7 +7,8 @@ import javax.inject.Inject;
 
 import dao.ItemDAO;
 import dao.ObjectStorageDAO;
-import dto.ImageOutputDTO;
+import dto.ImagePresignedUrlDTO;
+import dto.mapper.ImagePresignedUrlDTOMapper;
 
 @RequestScoped
 public class ImageService extends BaseService {
@@ -17,27 +18,27 @@ public class ImageService extends BaseService {
     @Inject
     protected ItemDAO itemDAO;
 
-    public ImageOutputDTO getPresignedObjectUrlForGet(Integer id, String objectName) {
+    public ImagePresignedUrlDTO getPresignedObjectUrlForGet(Integer id, String objectName) {
         Long count = itemDAO.countByIdAndObjectName(id, objectName);
         if (count != 1) {
             throw createAppException(msgConfig.GET_SIGNED_URL);
         }
         String url = objectStorageDAO.getPresignedObjectUrlMethodGet(objectName);
-        return new ImageOutputDTO(url, objectName);
+        return new ImagePresignedUrlDTOMapper().mapToDTO(url, objectName);
     }
 
-    public ImageOutputDTO getPresignedObjectUrlForPut() {
+    public ImagePresignedUrlDTO getPresignedObjectUrlForPut() {
         String objectName = UUID.randomUUID().toString();
         String url = objectStorageDAO.getPresignedObjectUrlMethodPut(objectName);
-        return new ImageOutputDTO(url, objectName);
+        return new ImagePresignedUrlDTOMapper().mapToDTO(url, objectName);
     }
 
-    public ImageOutputDTO getPresignedObjectUrlForPut(Integer id, String objectName) {
+    public ImagePresignedUrlDTO getPresignedObjectUrlForPut(Integer id, String objectName) {
         Long count = itemDAO.countByIdAndObjectName(id, objectName);
         if (count != 1) {
             throw createAppException(msgConfig.GET_SIGNED_URL);
         }
         String url = objectStorageDAO.getPresignedObjectUrlMethodPut(objectName);
-        return new ImageOutputDTO(url, objectName);
+        return new ImagePresignedUrlDTOMapper().mapToDTO(url, objectName);
     }
 }
