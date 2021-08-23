@@ -15,9 +15,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import dto.ItemInputDTO;
-import dto.ItemListOutputDTO;
-import dto.ItemOutputDTO;
+import dto.mapper.ItemDTOMapper;
+import resource.request.ItemAddRequest;
+import resource.request.ItemEditRequest;
+import resource.request.ItemRemoveRequest;
+import resource.response.mapper.ItemGetListResponseMapper;
+import resource.response.mapper.ItemGetResponseMapper;
 import service.ItemService;
 
 @RequestScoped
@@ -30,8 +33,9 @@ public class ItemResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "STAFF", "ADMIN" })
     public Response getAll() {
-        ItemListOutputDTO output = ItemService.getAll();
-        return Response.status(Status.OK).entity(output).build();
+        var output = ItemService.getAll();
+        var response = new ItemGetListResponseMapper().mapToResponse(output);
+        return Response.status(Status.OK).entity(response).build();
     }
 
     @GET
@@ -39,17 +43,18 @@ public class ItemResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "STAFF", "ADMIN" })
     public Response get(@PathParam("id") Integer id) {
-        ItemOutputDTO output = ItemService.get(id);
-        return Response.status(Status.OK).entity(output).build();
+        var output = ItemService.get(id);
+        var response = new ItemGetResponseMapper().mapToResponse(output);
+        return Response.status(Status.OK).entity(response).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "ADMIN" })
-    public Response add(ItemInputDTO item) {
+    public Response add(ItemAddRequest item) {
         validate(item);
-        ItemService.add(item);
+        ItemService.add(new ItemDTOMapper().mapToDTO(item));
         return Response.status(Status.CREATED).build();
     }
 
@@ -58,10 +63,10 @@ public class ItemResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "ADMIN" })
-    public Response edit(ItemInputDTO item, @PathParam("id") Integer id) {
+    public Response edit(ItemEditRequest item, @PathParam("id") Integer id) {
         item.setId(id);
         validate(item);
-        ItemService.edit(item);
+        ItemService.edit(new ItemDTOMapper().mapToDTO(item));
         return Response.status(Status.NO_CONTENT).build();
     }
 
@@ -70,9 +75,9 @@ public class ItemResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "ADMIN" })
-    public Response remove(ItemInputDTO item, @PathParam("id") Integer id) {
+    public Response remove(ItemRemoveRequest item, @PathParam("id") Integer id) {
         item.setId(id);
-        ItemService.remove(item);
+        ItemService.remove(new ItemDTOMapper().mapToDTO(item));
         return Response.status(Status.NO_CONTENT).build();
     }
 }

@@ -11,10 +11,9 @@ import config.MessageConfig;
 import dao.ItemDAO;
 import dao.ObjectStorageDAO;
 import dto.ItemDTO;
-import dto.ItemInputDTO;
-import dto.ItemListOutputDTO;
-import dto.ItemOutputDTO;
+import dto.mapper.ItemDTOMapper;
 import entity.Item;
+import entity.mapper.ItemEntityMapper;
 
 @RequestScoped
 public class ItemService extends BaseService {
@@ -32,73 +31,46 @@ public class ItemService extends BaseService {
         super(msgConfig);
     }
 
-    public ItemListOutputDTO getAll() {
+    public List<ItemDTO> getAll() {
         List<ItemDTO> ItemDTOList = itemDAO.readAll().stream().sequential().map(e -> {
-            String url = getImageUrl(e);
-            var dto = convert(e);
+            var url = getImageUrl(e);
+            var dto = new ItemDTOMapper().mapToDTO(e);
             dto.setImageSrc(url);
             return dto;
         }).collect(Collectors.toList());
-        return new ItemListOutputDTO(ItemDTOList);
+        return ItemDTOList;
     }
 
-    public ItemOutputDTO get(Integer id) {
+    public ItemDTO get(Integer id) {
         ItemDTO itemDTO = itemDAO.read(id).map(e -> {
-            String url = getImageUrl(e);
-            var dto = convert(e);
+            var url = getImageUrl(e);
+            var dto = new ItemDTOMapper().mapToDTO(e);
             dto.setImageSrc(url);
             return dto;
         }).orElseThrow(() -> createValidationException(msgConfig.NOT_EXIST));
-        return new ItemOutputDTO(itemDTO);
+        return itemDTO;
     }
 
     @Transactional
-    public void add(ItemInputDTO itemDTO) {
-        Item entity = convert(itemDTO);
+    public void add(ItemDTO itemDTO) {
+        Item entity = new ItemEntityMapper().mapToEntity(itemDTO);
         itemDAO.create(entity);
         itemDAO.detach(entity);
     }
 
     @Transactional
-    public void edit(ItemInputDTO itemDTO) {
+    public void edit(ItemDTO itemDTO) {
         Item target = itemDAO.read(itemDTO.getId()).orElseThrow(() -> createValidationException(msgConfig.NOT_EXIST));
-        target.setName(itemDTO.getName());
-        target.setPrice(itemDTO.getPrice());
-        target.setDescription(itemDTO.getDescription());
-        target.setObjectName(itemDTO.getObjectName());
-        target.setVersion(itemDTO.getVersion());
+        target = new ItemEntityMapper().mapToEntity(itemDTO, target);
         Item entity = itemDAO.update(target);
         itemDAO.detach(entity);
     }
 
     @Transactional
-    public void remove(ItemInputDTO itemDTO) {
-        Item entity = new Item();
-        entity.setId(itemDTO.getId());
-        entity.setVersion(itemDTO.getVersion());
+    public void remove(ItemDTO itemDTO) {
+        Item entity = new ItemEntityMapper().mapToEntity(itemDTO);
         itemDAO.delete(entity);
         objectStorageDAO.removeObject(itemDTO.getObjectName());
-    }
-
-    private ItemDTO convert(Item entity) {
-        ItemDTO itemDTO = new ItemDTO();
-        itemDTO.setId(entity.getId());
-        itemDTO.setName(entity.getName());
-        itemDTO.setPrice(entity.getPrice());
-        itemDTO.setDescription(entity.getDescription());
-        itemDTO.setObjectName(entity.getObjectName());
-        itemDTO.setVersion(entity.getVersion());
-        itemDAO.detach(entity);
-        return itemDTO;
-    }
-
-    private Item convert(ItemInputDTO itemDTO) {
-        Item entity = new Item();
-        entity.setName(itemDTO.getName());
-        entity.setPrice(itemDTO.getPrice());
-        entity.setDescription(itemDTO.getDescription());
-        entity.setObjectName(itemDTO.getObjectName());
-        return entity;
     }
 
     private String getImageUrl(Item entity) {

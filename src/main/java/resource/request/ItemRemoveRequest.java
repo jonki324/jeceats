@@ -22,5 +22,7 @@ public class ItemRemoveRequest implements Serializable {
 
     private Integer id;
 
+    private String objectName;
+
     private Integer version;
 }

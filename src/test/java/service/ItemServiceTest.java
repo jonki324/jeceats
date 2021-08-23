@@ -31,9 +31,6 @@ import config.MessageConfig;
 import dao.ItemDAO;
 import dao.ObjectStorageDAO;
 import dto.ItemDTO;
-import dto.ItemInputDTO;
-import dto.ItemListOutputDTO;
-import dto.ItemOutputDTO;
 import entity.Item;
 import exception.ErrorInfo;
 import exception.ValidationException;
@@ -73,8 +70,8 @@ class ItemServiceTest {
         when(itemDAO.readAll()).thenReturn(getMockItemList());
         when(itemDAO.countByIdAndObjectName(anyInt(), anyString())).thenReturn(1L);
         when(objectStorageDAO.getPresignedObjectUrlMethodGet(anyString())).thenReturn("objurl");
-        ItemListOutputDTO tmp = itemService.getAll();
-        int actual = tmp.getItems().size();
+        var tmp = itemService.getAll();
+        int actual = tmp.size();
         int expected = 2;
         assertEquals(expected, actual);
     }
@@ -82,8 +79,8 @@ class ItemServiceTest {
     @Test
     void testGetAllEmpty() {
         when(itemDAO.readAll()).thenReturn(new ArrayList<Item>());
-        ItemListOutputDTO tmp = itemService.getAll();
-        int actual = tmp.getItems().size();
+        var tmp = itemService.getAll();
+        int actual = tmp.size();
         int expected = 0;
         assertEquals(expected, actual);
     }
@@ -93,8 +90,7 @@ class ItemServiceTest {
         when(itemDAO.read(anyInt())).thenReturn(Optional.of(getMockItem()));
         when(itemDAO.countByIdAndObjectName(anyInt(), anyString())).thenReturn(1L);
         when(objectStorageDAO.getPresignedObjectUrlMethodGet(anyString())).thenReturn("objurl");
-        ItemOutputDTO tmp = itemService.get(1);
-        ItemDTO actual = tmp.getItem();
+        ItemDTO actual = itemService.get(1);
         assertNotNull(actual);
     }
 
@@ -183,8 +179,8 @@ class ItemServiceTest {
     }
 
     @Disabled
-    private ItemInputDTO getItemInputDTO() {
-        ItemInputDTO item = new ItemInputDTO();
+    private ItemDTO getItemInputDTO() {
+        var item = new ItemDTO();
         item.setId(1);
         item.setName("name1");
         item.setPrice(new BigDecimal("100"));
