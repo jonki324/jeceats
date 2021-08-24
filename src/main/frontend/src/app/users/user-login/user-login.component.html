@@ -12,7 +12,7 @@
                 <label for="loginId" class="col-2 col-form-label">LoginID</label>
                 <div class="col-10">
                   <input type="text" name="loginId" id="loginId" class="form-control" required
-                    [(ngModel)]="login.loginId" #loginId="ngModel"
+                    [(ngModel)]="user.loginId" #loginId="ngModel"
                     appInvalidStyle [errors]="errors"
                     placeholder="LoginID"
                   >
@@ -23,7 +23,7 @@
                 <label for="password" class="col-2 col-form-label">Password</label>
                 <div class="col-10">
                   <input type="password" name="password" id="password" class="form-control" required
-                    [(ngModel)]="login.password" #password="ngModel"
+                    [(ngModel)]="user.password" #password="ngModel"
                     appInvalidStyle [errors]="errors"
                     placeholder="Password"
                   >

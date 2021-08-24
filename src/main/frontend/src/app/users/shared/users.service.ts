@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { Login } from './login.model';
 import { User } from './user.model';
 import { ApiService } from '../../core/services/api.service';
 import { JwtService } from '../../core/services/jwt.service';
@@ -23,11 +22,11 @@ export class UsersService {
     private jwtService: JwtService
   ) { }
 
-  doLogin(login: Login): Observable<User> {
+  doLogin(login: Partial<User>): Observable<User> {
     const url = `${this.apiUrl}/login`
     return this.apiService.post(url, login).pipe(
       map(data => {
-        this.saveAuth(data.user, data.token)
+        this.saveAuth(data.user, data.user.token)
         return data.user
       })
     )

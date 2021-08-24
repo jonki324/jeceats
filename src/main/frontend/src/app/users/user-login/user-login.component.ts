@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Login } from '../shared/login.model';
 import { ToastService } from '../../core/services/toast.service';
 import { UsersService } from '../shared/users.service';
+import { User } from '../shared/user.model';
 
 @Component({
   selector: 'app-user-login',
@@ -11,7 +11,7 @@ import { UsersService } from '../shared/users.service';
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent implements OnInit {
-  login: Login = {} as Login
+  user: Partial<User> = {} as User
 
   errors: any = {}
 
@@ -25,7 +25,7 @@ export class UserLoginComponent implements OnInit {
   }
 
   onSubmit(form: NgForm): void {
-    this.usersService.doLogin(this.login).subscribe(
+    this.usersService.doLogin(this.user).subscribe(
       () => this.router.navigate(['/items']),
       errors => {
         this.errors = errors.errors ?? {}
